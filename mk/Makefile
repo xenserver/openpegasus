@@ -2,7 +2,7 @@ include $(B_BASE)/common.mk
 include $(B_BASE)/rpmbuild.mk
 
 REPONAME := openpegasus
-REPO := $(call hg_loc,$(REPONAME))
+REPO := $(call git_loc,$(REPONAME))
 
 PEGASUS_VERSION := 2.10.0
 XS_PATCH_VERSION := xs1
