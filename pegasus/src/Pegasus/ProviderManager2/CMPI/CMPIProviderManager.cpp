@@ -440,10 +440,11 @@ void CMPIProviderManager::_setupCMPIContexts(
     // add identity context
     const IdentityContainer container =
     context->get(IdentityContainer::NAME);
+    String principal = container.getUserName(); //fixed as the username is set previously as username + " " + password
     eCtx->ft->addEntry(
         eCtx,
         CMPIPrincipal,
-        (CMPIValue*)(const char*)container.getUserName().getCString(),
+        (CMPIValue*)(const char*)principal.getCString(),
         CMPI_chars);
 
     // add AcceptLanguages to CMPI context

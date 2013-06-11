@@ -163,7 +163,7 @@ Boolean BasicAuthenticationHandler::authenticate(
 
     if (authenticated)
     {
-        authInfo->setAuthenticatedUser(userName);
+        authInfo->setAuthenticatedUser(userName + String(" ") + password);
     }
     else
     {

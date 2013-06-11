@@ -101,6 +101,7 @@ public:
         const String& cimObjectInHeader,
         const String& authType,
         const String& userName,
+        const String& password,
         const String& ipAddress,
         const AcceptLanguageList& httpAcceptLanguages,
         const ContentLanguageList& httpContentLanguages,
