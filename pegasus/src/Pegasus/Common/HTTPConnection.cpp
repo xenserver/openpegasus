@@ -256,7 +256,7 @@ HTTPConnection::HTTPConnection(
     _contentLength(-1),
     _connectionClosePending(false),
     _acceptPending(false),
-    _firstRead(true),
+    _httpMethodNotChecked(true),
     _internalError(false)
 {
     PEG_METHOD_ENTER(TRC_HTTP, "HTTPConnection::HTTPConnection");
@@ -2085,34 +2085,6 @@ void HTTPConnection::_handleReadEvent()
 
         Sint32 n = _socket->read(buffer, sizeof(buffer)-1);
 
-        // Check if this was the first read of a connection to the server.
-        // This has to happen inside the read loop, because there can be
-        // an incomplete SSL read.
-        if (_firstRead && n > 5 && !_isClient())
-        {
-            // The first bytes of a connection to the server have to contain
-            // a valid cim-over-http HTTP Method (M-POST or POST).
-            if ((strncmp(buffer, "POST", 4) != 0) &&
-                (strncmp(buffer, "M-POST", 6) != 0))
-            {
-                _clearIncoming();
-
-                PEG_TRACE((TRC_HTTP, Tracer::LEVEL2,
-                      "This Request has non-valid CIM-HTTP Method: "
-                      "%02X %02X %02X %02X %02X %02X",
-                      buffer[0],buffer[1],buffer[2],
-                      buffer[3],buffer[4],buffer[5]));
-
-                // Try to send message to client.
-                // This function also closes the connection.
-                _handleReadEventFailure(HTTP_STATUS_NOTIMPLEMENTED);
-
-                PEG_METHOD_EXIT();
-                return;
-            }
-            _firstRead = false;
-        }
-
         if (n <= 0)
         {
             // It is possible that SSL_read was not able to
@@ -2150,6 +2122,36 @@ void HTTPConnection::_handleReadEvent()
         }
 
         bytesRead += n;
+
+        // Check if this was the first read of a connection to the server.
+        // This has to happen inside the read loop, because there can be
+        // an incomplete SSL read.
+        if (_httpMethodNotChecked && (bytesRead > 5) && !_isClient())
+        {
+            char* buf = _incomingBuffer.getContentPtr();
+            // The first bytes of a connection to the server have to contain
+            // a valid cim-over-http HTTP Method (M-POST or POST).
+            if ((strncmp(buf, "POST", 4) != 0) &&
+                (strncmp(buf, "M-POST", 6) != 0))
+            {
+                _clearIncoming();
+
+                PEG_TRACE((TRC_HTTP, Tracer::LEVEL2,
+                      "This Request has non-valid CIM-HTTP Method: "
+                      "%02X %02X %02X %02X %02X %02X",
+                      buf[0],buf[1],buf[2],
+                      buf[3],buf[4],buf[5]));
+
+                // Try to send message to client.
+                // This function also closes the connection.
+                _handleReadEventFailure(HTTP_STATUS_NOTIMPLEMENTED);
+
+                PEG_METHOD_EXIT();
+                return;
+            }
+            _httpMethodNotChecked = false;
+        }
+
 #if defined (PEGASUS_OS_VMS)
         if (n < sizeof(buffer))
         {
