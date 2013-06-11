@@ -439,6 +439,33 @@ static void _initConfigProperty(const String &propName, Uint32 value)
     ConfigManager::getInstance()->initCurrentValue(propName, String(startP, n));
 }
 
+static void _addHttpAcceptors(CIMServer* server, Boolean ipv4, Boolean ipv6, bool https, Uint32 portNumber)
+{
+    if (ipv6)
+    {
+        _cimServer->addAcceptor(HTTPAcceptor::IPV6_CONNECTION,
+           portNumber, https);
+    }
+    if (ipv4)
+    {
+        _cimServer->addAcceptor(HTTPAcceptor::IPV4_CONNECTION,
+	    portNumber, https);
+    }
+    // The port number is converted to a string to avoid the
+    //  addition of localized characters (e.g., "5,988").
+    char scratchBuffer[22];
+    Uint32 n;
+    const char * portNumberStr = Uint32ToString(
+        scratchBuffer, portNumber, n);
+    MessageLoaderParms parms(
+        "src.Server.cimserver.LISTENING_ON_HTTP_PORT",
+	"Listening on HTTP$0 port $1.", https?"S":"", portNumberStr);
+    Logger::put_l(
+        Logger::STANDARD_LOG, System::CIMSERVER, Logger::INFORMATION,
+	parms);
+    cout << MessageLoader::getMessage(parms) << endl;
+}
+
 /////////////////////////////////////////////////////////////////////////
 //  MAIN
 //////////////////////////////////////////////////////////////////////////
@@ -1040,6 +1067,8 @@ int CIMServerProcess::cimserver_run(
                 portNumberHttp = System::lookupPort(
                     WBEM_HTTP_SERVICE_NAME, WBEM_DEFAULT_HTTP_PORT);
                 _initConfigProperty("httpPort", portNumberHttp);
+
+		_addHttpAcceptors(_cimServer, addIP4Acceptor, addIP6Acceptor, false, portNumberHttp);
             }
             else
             {
@@ -1048,38 +1077,19 @@ int CIMServerProcess::cimserver_run(
                 //
                 CString portString = httpPort.getCString();
                 char* end = 0;
-                portNumberHttp = strtol(portString, &end, 10);
-                if (!(end != 0 && *end == '\0'))
-                {
-                    throw InvalidPropertyValue("httpPort", httpPort);
-                }
+		const char* start = portString;
+		while (end == 0 || *end != '\0')
+		{
+                    portNumberHttp = strtol(start, &end, 10);
+		    if (*end == ',')
+		      start = end+1;
+		    else if (!(end != 0 && *end == '\0'))
+                    {
+                        throw InvalidPropertyValue("httpPort", httpPort);
+                    }
+		    _addHttpAcceptors(_cimServer, addIP4Acceptor, addIP6Acceptor, false, portNumberHttp);
+		}
             }
-
-            if (addIP6Acceptor)
-            {
-                _cimServer->addAcceptor(HTTPAcceptor::IPV6_CONNECTION,
-                    portNumberHttp, false);
-            }
-            if (addIP4Acceptor)
-            {
-                _cimServer->addAcceptor(HTTPAcceptor::IPV4_CONNECTION,
-                    portNumberHttp, false);
-            }
-            // The port number is converted to a string to avoid the
-            //  addition of localized characters (e.g., "5,988").
-            char scratchBuffer[22];
-            Uint32 n;
-            const char * portNumberHttpStr = Uint32ToString(
-                scratchBuffer, portNumberHttp, n);
-            MessageLoaderParms parms(
-                "src.Server.cimserver.LISTENING_ON_HTTP_PORT",
-                "Listening on HTTP port $0.", portNumberHttpStr);
-            Logger::put_l(
-                Logger::STANDARD_LOG, System::CIMSERVER, Logger::INFORMATION,
-                parms);
-#if defined(PEGASUS_DEBUG)
-            cout << MessageLoader::getMessage(parms) << endl;
-#endif
         }
 
         if (enableHttpsConnection)
@@ -1094,6 +1104,7 @@ int CIMServerProcess::cimserver_run(
                 portNumberHttps = System::lookupPort(
                     WBEM_HTTPS_SERVICE_NAME, WBEM_DEFAULT_HTTPS_PORT);
                 _initConfigProperty("httpsPort", portNumberHttps);
+		_addHttpAcceptors(_cimServer, addIP4Acceptor, addIP6Acceptor, true, portNumberHttps);
             }
             else
             {
@@ -1102,37 +1113,19 @@ int CIMServerProcess::cimserver_run(
                 //
                 CString portString = httpsPort.getCString();
                 char* end = 0;
-                portNumberHttps = strtol(portString, &end, 10);
-                if (!(end != 0 && *end == '\0'))
-                {
-                    throw InvalidPropertyValue("httpsPort", httpsPort);
-                }
+		const char* start = portString;
+		while (end == 0 || *end != '\0')
+		{
+                    portNumberHttps = strtol(start, &end, 10);
+		    if (*end == ',')
+		      start = end+1;
+		    else if (!(end != 0 && *end == '\0'))
+                    {
+                        throw InvalidPropertyValue("httpsPort", httpsPort);
+                    }
+		    _addHttpAcceptors(_cimServer, addIP4Acceptor, addIP6Acceptor, true, portNumberHttps);
+		}
             }
-            if (addIP6Acceptor)
-            {
-                _cimServer->addAcceptor(HTTPAcceptor::IPV6_CONNECTION,
-                    portNumberHttps, true);
-            }
-            if (addIP4Acceptor)
-            {
-                _cimServer->addAcceptor(HTTPAcceptor::IPV4_CONNECTION,
-                    portNumberHttps, true);
-            }
-            // The port number is converted to a string to avoid the
-            //  addition of localized characters (e.g., "5,989").
-            char scratchBuffer[22];
-            Uint32 n;
-            const char * portNumberHttpsStr = Uint32ToString(
-                scratchBuffer, portNumberHttps, n);
-            MessageLoaderParms parms(
-                "src.Server.cimserver.LISTENING_ON_HTTPS_PORT",
-                "Listening on HTTPS port $0.", portNumberHttpsStr);
-            Logger::put_l(
-                Logger::STANDARD_LOG, System::CIMSERVER, Logger::INFORMATION,
-                parms);
-#if defined(PEGASUS_DEBUG)
-            cout << MessageLoader::getMessage(parms) << endl;
-#endif
         }
 
 #ifndef PEGASUS_DISABLE_LOCAL_DOMAIN_SOCKET
