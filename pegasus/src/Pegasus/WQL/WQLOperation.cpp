@@ -52,6 +52,7 @@ const char* WQLOperationToString(WQLOperation x)
         case WQL_IS_NOT_NULL: return "WQL_IS_NOT_NULL";
         case WQL_IS_NOT_TRUE: return "WQL_IS_NOT_TRUE";
         case WQL_IS_NOT_FALSE: return "WQL_IS_NOT_FALSE";
+        case WQL_LIKE: return "WQL_LIKE";
         default: return "UNKNOWN OPERATION";
     }
 }

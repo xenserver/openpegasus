@@ -64,7 +64,8 @@
      TOK_SELECT = 277,
      TOK_WHERE = 278,
      TOK_FROM = 279,
-     TOK_UNEXPECTED_CHAR = 280
+     TOK_LIKE = 280,
+     TOK_UNEXPECTED_CHAR = 281
    };
 #endif
 /* Tokens.  */
@@ -90,7 +91,8 @@
 #define TOK_SELECT 277
 #define TOK_WHERE 278
 #define TOK_FROM 279
-#define TOK_UNEXPECTED_CHAR 280
+#define TOK_LIKE 280
+#define TOK_UNEXPECTED_CHAR 281
 
 
 
@@ -104,8 +106,8 @@ typedef union YYSTYPE
    char* strValue;
    void* nodeValue;
 }
-/* Line 1489 of yacc.c.  */
-#line 106 "WQLtemp.h"
+/* Line 1529 of yacc.c.  */
+#line 108 "WQLtemp.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

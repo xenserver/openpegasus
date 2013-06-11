@@ -125,6 +125,8 @@ PEGASUS_NAMESPACE_END
 %token <intValue> TOK_WHERE
 %token <intValue> TOK_FROM
 
+%token <intValue> TOK_LIKE
+
 %token <intValue> TOK_UNEXPECTED_CHAR
 
 %type <strValue> propertyName
@@ -297,6 +299,11 @@ comparisonPredicate
         // If SNIA tests, allow the ISA but do not pass className
         yyerror("ISA Token Not Supported");
 #endif
+    }
+    | comparisonTerm TOK_LIKE comparisonTerm 
+    {
+    WQL_TRACE(("YACC: TOK_LIKE\n"));
+    globalParserState->statement->appendOperation(WQL_LIKE);
     }
 
 nullPredicate

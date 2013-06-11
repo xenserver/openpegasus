@@ -39,6 +39,48 @@ PEGASUS_USING_STD;
 
 PEGASUS_NAMESPACE_BEGIN
 
+Boolean _LikeEvaluate(const char *prop_value, const char *like_exp)
+{
+    /* Allowed syntax for the Like expressions
+      - '%123' which represents a string which ends with '123'
+      - '123%' which represents a string that begins with '123' 
+      - '%123%' which represents a string that contains '123'
+    */
+    bool match = false;
+    if (like_exp==NULL || prop_value==NULL || like_exp[0]=='\0' || prop_value[0]=='\0')
+        return false;
+    int like_exp_len = strlen(like_exp);
+    char *str_to_match = (char *)malloc(like_exp_len+1);
+    if (like_exp[0] == '%') {
+        strcpy(str_to_match, &like_exp[1]);
+        if (like_exp[like_exp_len-1] == '%') {
+            /* trailing % - substring match is sufficient */
+            str_to_match[like_exp_len-2] = '\0';
+            match = (strstr(prop_value, str_to_match) != NULL);
+        }
+        else {
+            /* no trailing %, exact match for the end of the string is required */
+            char *tmp = strstr(prop_value, str_to_match);
+            if (tmp) 
+                match = (strcmp(tmp, str_to_match) == 0);
+        }
+    }
+    else {        
+        strcpy(str_to_match, like_exp);
+        if (like_exp[like_exp_len-1] == '%') {
+            /* trailing % - exact match for beginning is required */
+            str_to_match[like_exp_len-1] = '\0';
+            match= (strncmp(prop_value, str_to_match, strlen(str_to_match)) == 0);
+        }
+        else {
+            /* no %s at all, exact match is required */
+            match = (strcmp(prop_value, str_to_match) == 0);
+        }
+    }
+    free (str_to_match);
+    return match;
+}
+
 template<class T>
 inline static Boolean _Compare(const T& x, const T& y, WQLOperation op)
 {
@@ -117,10 +159,19 @@ static Boolean _Evaluate(
 
         case WQLOperand::STRING_VALUE:
         {
-            return _Compare(
-            lhs.getStringValue(),
-            rhs.getStringValue(),
-            op);
+            if(op != WQL_LIKE) {
+                return _Compare(
+                lhs.getStringValue(),
+                rhs.getStringValue(),
+                op);
+            }
+            else {
+                CString lhsstr = lhs.getStringValue().getCString();
+                CString rhsstr = rhs.getStringValue().getCString();
+                const char* lhscs = (const char *)lhsstr;
+                const char* rhscs = (const char *)rhsstr;
+                return _LikeEvaluate((const char *)lhsstr, (const char *)rhsstr);
+            }
         }
 
         default:
@@ -416,6 +467,7 @@ Boolean WQLSelectStatementRep::evaluateWhereClause(
         case WQL_LE:
         case WQL_GT:
         case WQL_GE:
+        case WQL_LIKE:
         {
             Array<WQLOperand> whereOperands(_operands);
             PEGASUS_ASSERT(whereOperands.size() >= 2);
@@ -445,6 +497,14 @@ Boolean WQLSelectStatementRep::evaluateWhereClause(
 
             if (rhs.getType() != lhs.getType())
                 throw TypeMismatchException();
+
+            if(operation == WQL_LIKE && 
+               (lhs.getType() != WQLOperand::STRING_VALUE)) {
+                MessageLoaderParms parms(
+                    "WQL.WQLSelectStatementRep.PROP_NOT_FOUND",
+                    "LIKE syntax can only be used against string properties.");
+                throw QueryRuntimeException(parms);
+            }
 
             //
             // Now that the types are known to be alike, apply the
