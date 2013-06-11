@@ -1,0 +1,90 @@
+ 
+ 
+Valid cases:
+Testing all set options.
+Set the current values:
+Current value for the property traceLevel is set to "1" in CIMServer.
+ 
+Current value for the property traceLevel is set to "2" in CIMServer.
+ 
+Current value for the property traceLevel is set to "3" in CIMServer.
+ 
+Current value for the property traceLevel is set to "4" in CIMServer.
+ 
+Current value for the property traceComponents is set to "ALL" in CIMServer.
+ 
+Current value for the property traceComponents is set to "Config" in CIMServer.
+ 
+Current value for the property traceComponents is set to "Config,XmlParser" in CIMServer.
+ 
+Current value for the property traceFilePath is set to "/tmp/test.trace" in CIMServer.
+ 
+Current value for the property traceFilePath is set to "/tmp/test1.trace" in CIMServer.
+ 
+Current value for the property traceFilePath is set to "/tmp/test.trace" in CIMServer.
+ 
+Testing all get options.
+ 
+Current value: 4
+ 
+Current value: Config,XmlParser
+ 
+Current value: /tmp/test.trace
+ 
+Get the current values:
+ 
+Current value: 4
+ 
+Current value: Config,XmlParser
+ 
+Current value: /tmp/test.trace
+ 
+Get the planned values:
+Planned value: 1
+ 
+Planned value: 
+ 
+Set the planned values:
+ 
+Planned value for the property traceComponents is set to "ALL" in CIMServer.
+ 
+Planned value for the property traceComponents is set to "Config" in CIMServer.
+ 
+Planned value for the property traceComponents is set to "Config,XmlParser" in CIMServer.
+ 
+Planned value for the property traceComponents is set to "" in CIMServer.
+ 
+Testing all unset options.
+Unset the current values: 
+Current value for the property 'traceLevel' is set to default value in CIMServer.
+ 
+Current value for the property 'traceComponents' is set to default value in CIMServer.
+ 
+Unset the planned values:
+Property 'traceComponents' is unset in the configuration file.
+ 
+Testing all LONG options.
+Usage: cimconfig -g name [ -c ] [ -d ] [ -p ]
+                 -s name=value [ -c ] [ -p ]
+                 -u name [ -c ] [ -p ]
+                 -l [ -c | -p ]
+                 -h
+                 --help
+                 --version
+Options : 
+    -c         - Use current configuration
+    -d         - Use default configuration
+    -g         - Get the value of specified configuration property
+    -h, --help - Display this help message
+    -l         - Display all the configuration properties
+    -p         - Configuration used on next CIM Server start
+    -s         - Add or Update configuration property value
+    -u         - Reset configuration property to its default value
+    --version  - Display CIM Server version number
+
+Usage note: The cimconfig command can be used to update the next planned
+configuration without having the CIM Server running. All other options 
+of the cimconfig command require that the CIM Server is running.
+ 
+Version 2.4
+ 

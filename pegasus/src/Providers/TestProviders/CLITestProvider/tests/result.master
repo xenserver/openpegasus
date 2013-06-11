@@ -1,0 +1,1348 @@
+0. +++++ Test For getClass
+
+//    Class Test_CLITestProviderClass
+
+    [Version ("2.5.0") : Restricted, Translatable, 
+    Description ("Class to test input and output of all property types "
+        "that can be handled by cimcli.") : Translatable]
+class Test_CLITestProviderClass
+{
+    [key : DisableOverride]
+string Id;
+string Name;
+    [Description ("Return name value pair defining input parameters for "
+        "the operation received by the provider such as propertylist.") 
+        : Translatable]
+string requestInputParameters;
+boolean scalBool;
+uint8 scalUint8;
+sint8 scalSint8;
+uint16 scalUint16;
+sint16 scalSint16;
+uint32 scalUint32;
+sint32 scalSint32;
+uint64 scalUint64;
+sint64 scalSint64;
+real32 scalReal32;
+real64 scalReal64;
+string scalString;
+datetime scalDateTime;
+boolean defaultBool = TRUE;
+uint8 defaultUint8 = 4;
+sint8 defaultSint8 = 4;
+uint16 defaultUint16 = 4;
+sint16 defaultSint16 = 4;
+uint32 defaultUint32 = 4;
+sint32 defaultSint32 = 4;
+uint64 defaultUint64 = 4;
+sint64 defaultSint64 = 4;
+real32 defaultReal32;
+real64 defaultReal64;
+string defaultString = "test\"embedded\"quote";
+datetime defaultDateTime;
+boolean arrayBool[];
+uint8 arrayUint8[];
+sint8 arraySint8[];
+uint16 arrayUint16[];
+sint16 arraySint16[];
+uint32 arrayUint32[];
+sint32 arraySint32[];
+uint64 arrayUint64[];
+sint64 arraySint64[];
+real32 arrayReal32[];
+real64 arrayReal64[];
+string arrayString[];
+datetime arrayDateTime[];
+uint32 ReferenceParamTest([in : DisableOverride] uint32 InParam1, [out 
+    : DisableOverride] uint32 OutParam2);
+    [Description ("Method to test input and output of all parameter types. "
+        "Provider is expected to return all parameters input.") : Translatable]
+uint32 InOutParamTest([in : DisableOverride, 
+out : DisableOverride] boolean scalBool, [in : DisableOverride, 
+out : DisableOverride] uint8 scalUint8, [in : DisableOverride, 
+out : DisableOverride] sint8 scalSint8, [in : DisableOverride, 
+out : DisableOverride] uint16 scalUint16, [in : DisableOverride, 
+out : DisableOverride] sint16 scalSint16, [in : DisableOverride, 
+out : DisableOverride] uint32 scalUint32, [in : DisableOverride, 
+out : DisableOverride] sint32 scalSint32, [in : DisableOverride, 
+out : DisableOverride] uint64 scalUint64, [in : DisableOverride, 
+out : DisableOverride] real32 scalReal32, [in : DisableOverride, 
+out : DisableOverride] real64 scalReal64, [in : DisableOverride, 
+out : DisableOverride] string scalString, [in : DisableOverride, 
+out : DisableOverride] datetime scalDateTime, [in : DisableOverride, 
+    
+out : DisableOverride] boolean arrayBool[], [in : DisableOverride, 
+    
+out : DisableOverride] uint8 arrayUint8[], [in : DisableOverride, 
+out : DisableOverride] sint8 arraySint8[], [in : DisableOverride, 
+out : DisableOverride] uint16 arrayUint16[], [in : DisableOverride, 
+    
+out : DisableOverride] sint16 arraySint16[], [in : DisableOverride, 
+    
+out : DisableOverride] uint32 arrayUint32[], [in : DisableOverride, 
+    
+out : DisableOverride] sint32 arraySint32[], [in : DisableOverride, 
+    
+out : DisableOverride] uint64 arrayUint64[], [in : DisableOverride, 
+    
+out : DisableOverride] real32 arrayReal32[], [in : DisableOverride, 
+    
+out : DisableOverride] real64 arrayReal64[], [in : DisableOverride, 
+    
+out : DisableOverride] string arrayString[], [in : DisableOverride, 
+    
+out : DisableOverride] datetime arrayDateTime[], [in : DisableOverride, 
+    
+out : DisableOverride] uint32 returnValue);
+uint32 FullParamTest([in : DisableOverride] boolean inScalBool, [in 
+    : DisableOverride] uint8 inScalUint8, [in : DisableOverride] sint8 
+    inScalSint8, [in : DisableOverride] uint16 inScalUint16, [in : 
+    DisableOverride] sint16 inScalSint16, [in : DisableOverride] uint32 
+    inScalUint32, [in : DisableOverride] sint32 inScalSint32, [in : 
+    DisableOverride] uint64 inScalUint64, [in : DisableOverride] real32 
+    inScalReal32, [in : DisableOverride] real64 inScalReal64, [in : 
+    DisableOverride] string inScalString, [in : DisableOverride] datetime 
+    inScalDateTime, [out : DisableOverride] boolean outScalBool, [out 
+    : DisableOverride] uint8 outScalUint8, [out : DisableOverride] 
+    sint8 outScalSint8, [out : DisableOverride] uint16 outScalUint16, 
+    [out : DisableOverride] sint16 outScalSint16, [out : DisableOverride] 
+    uint32 outScalUint32, [out : DisableOverride] sint32 outScalSint32, 
+    [out : DisableOverride] uint64 outScalUint64, [out : DisableOverride] 
+    real32 outScalReal32, [out : DisableOverride] real64 outScalReal64, 
+    [out : DisableOverride] string outScalString, [out : DisableOverride] 
+    datetime outScalDateTime);
+    [Description ("Method to set parameters to modify provider behavior") 
+        : Translatable]
+uint32 setProviderParameters([in : DisableOverride, 
+out : DisableOverride] string substituteHostName);
+    [Description ("Method to reset all parameters provider behavior  parameters") 
+        : Translatable]
+uint32 resetProviderParameters();
+};
+
+//    Class Test_CLITestProviderLinkClass
+
+    [ASSOCIATION : DisableOverride, 
+    Version ("1.0.0") : Restricted, Translatable, 
+    Description ("Defines the relationship between parents and children. "
+        "Test Ref/Assoc functions in cimli") : Translatable]
+class Test_CLITestProviderLinkClass
+{
+    [key : DisableOverride]
+reference parent;
+    [key : DisableOverride]
+reference child;
+string requestInputParameters;
+};
+
+//    Class Test_CLITestProviderLinkClass
+
+class Test_CLITestProviderLinkClass
+{
+reference parent;
+reference child;
+string requestInputParameters;
+};
+<CLASS NAME="Test_CLITestProviderLinkClass">
+    <QUALIFIER NAME="ASSOCIATION" TYPE="boolean" OVERRIDABLE="false">
+        <VALUE>
+            TRUE
+        </VALUE>
+    </QUALIFIER>
+    <QUALIFIER NAME="Version" TYPE="string" TOSUBCLASS="false" TRANSLATABLE="true">
+        <VALUE>
+            1.0.0
+        </VALUE>
+    </QUALIFIER>
+    <QUALIFIER NAME="Description" TYPE="string" TRANSLATABLE="true">
+        <VALUE>
+            Defines the relationship between parents and children. Test Ref/Assoc functions in cimli
+        </VALUE>
+    </QUALIFIER>
+    <PROPERTY.REFERENCE NAME="parent" REFERENCECLASS="Test_CLITestProviderClass">
+        <QUALIFIER NAME="key" TYPE="boolean" OVERRIDABLE="false">
+            <VALUE>
+                TRUE
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY.REFERENCE>
+    <PROPERTY.REFERENCE NAME="child" REFERENCECLASS="Test_CLITestProviderClass">
+        <QUALIFIER NAME="key" TYPE="boolean" OVERRIDABLE="false">
+            <VALUE>
+                TRUE
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY.REFERENCE>
+    <PROPERTY NAME="requestInputParameters" TYPE="string">
+    </PROPERTY>
+</CLASS>
+<CLASS NAME="Test_CLITestProviderLinkClass">
+    <QUALIFIER NAME="ASSOCIATION" TYPE="boolean" OVERRIDABLE="false">
+        <VALUE>
+            TRUE
+        </VALUE>
+    </QUALIFIER>
+    <QUALIFIER NAME="Version" TYPE="string" TOSUBCLASS="false" TRANSLATABLE="true">
+        <VALUE>
+            1.0.0
+        </VALUE>
+    </QUALIFIER>
+    <QUALIFIER NAME="Description" TYPE="string" TRANSLATABLE="true">
+        <VALUE>
+            Defines the relationship between parents and children. Test Ref/Assoc functions in cimli
+        </VALUE>
+    </QUALIFIER>
+    <PROPERTY.REFERENCE NAME="parent" REFERENCECLASS="Test_CLITestProviderClass" CLASSORIGIN="Test_CLITestProviderLinkClass">
+        <QUALIFIER NAME="key" TYPE="boolean" OVERRIDABLE="false">
+            <VALUE>
+                TRUE
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY.REFERENCE>
+    <PROPERTY.REFERENCE NAME="child" REFERENCECLASS="Test_CLITestProviderClass" CLASSORIGIN="Test_CLITestProviderLinkClass">
+        <QUALIFIER NAME="key" TYPE="boolean" OVERRIDABLE="false">
+            <VALUE>
+                TRUE
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY.REFERENCE>
+    <PROPERTY NAME="requestInputParameters" CLASSORIGIN="Test_CLITestProviderLinkClass" TYPE="string">
+    </PROPERTY>
+</CLASS>
+8. +++++ Test QualifierDecl Operations
+
+Qualifier ASSOCIATION : boolean = FALSE, Scope(class association), 
+    Flavor(DisableOverride);
+
+Qualifier Abstract : boolean = FALSE, Scope(class association indication), 
+    Flavor(DisableOverride, Restricted);
+
+Qualifier Aggregate : boolean = FALSE, Scope(reference), Flavor(DisableOverride);
+
+Qualifier Aggregation : boolean = FALSE, Scope(association), Flavor(DisableOverride);
+
+Qualifier Alias : string = null, Scope(property reference method), 
+    Flavor(Translatable);
+
+Qualifier ArrayType : string = "Bag", Scope(property parameter);
+
+Qualifier ASSOCIATION : boolean = FALSE, Scope(class association), 
+    Flavor(DisableOverride);
+
+Qualifier BitMap : string[] = null, Scope(property method parameter);
+
+Qualifier BitValues : string[] = null, Scope(property method parameter), 
+    Flavor(Translatable);
+
+Qualifier CLASS : string = null, Scope(property method), Flavor(DisableOverride, 
+    Translatable);
+
+Qualifier Counter : boolean = FALSE, Scope(property method parameter);
+
+Qualifier Delete : boolean = FALSE, Scope(association reference);
+
+Qualifier Deprecated : string[] = null, Scope(class association property 
+    method);
+
+Qualifier Description : string = null, Scope(any), Flavor(Translatable);
+
+Qualifier DisplayName : string = null, Scope(any), Flavor(Translatable);
+
+Qualifier DN : boolean = FALSE, Scope(property parameter), Flavor(DisableOverride);
+
+Qualifier EmbeddedObject : boolean = FALSE, Scope(property);
+
+Qualifier Expensive : boolean = FALSE, Scope(class association property 
+    reference method);
+
+Qualifier Experimental : boolean = FALSE, Scope(any), Flavor(DisableOverride);
+
+Qualifier Gauge : boolean = FALSE, Scope(property method parameter);
+
+Qualifier Ifdeleted : boolean = FALSE, Scope(association reference);
+
+Qualifier In : boolean = TRUE, Scope(parameter), Flavor(DisableOverride);
+
+Qualifier INDICATION : boolean = FALSE, Scope(class indication), Flavor(DisableOverride);
+
+Qualifier Invisible : boolean = FALSE, Scope(class association property 
+    reference method);
+
+Qualifier Key : boolean = FALSE, Scope(property reference), Flavor(DisableOverride);
+
+Qualifier Large : boolean = FALSE, Scope(class property);
+
+Qualifier MappingStrings : string[] = null, Scope(class association 
+    indication property reference);
+
+Qualifier Max : uint32 = null, Scope(reference);
+
+Qualifier MaxLen : uint32 = null, Scope(property method parameter);
+
+Qualifier MaxValue : sint64 = null, Scope(property method parameter);
+
+Qualifier Min : uint32 = 0, Scope(reference);
+
+Qualifier MinValue : sint64 = null, Scope(property method parameter);
+
+Qualifier ModelCorrespondence : string[] = null, Scope(property);
+
+Qualifier Nonlocal : string = null, Scope(reference);
+
+Qualifier NonlocalType : string = null, Scope(reference);
+
+Qualifier NullValue : string = null, Scope(property), Flavor(DisableOverride);
+
+Qualifier Octetstring : boolean = FALSE, Scope(property parameter);
+
+Qualifier Out : boolean = FALSE, Scope(parameter), Flavor(DisableOverride);
+
+Qualifier Override : string = null, Scope(property reference method), 
+    Flavor(DisableOverride);
+
+Qualifier Propagated : string = null, Scope(property), Flavor(DisableOverride);
+
+Qualifier PropertyUsage : string = "CurrentContext", Scope(property);
+
+Qualifier Provider : string = null, Scope(any);
+
+Qualifier Read : boolean = TRUE, Scope(property);
+
+Qualifier Required : boolean = FALSE, Scope(property);
+
+Qualifier Revision : string = ".5", Scope(class association indication), 
+    Flavor(Translatable);
+
+Qualifier Source : string = null, Scope(class association indication);
+
+Qualifier SourceType : string = null, Scope(class association indication 
+    reference);
+
+Qualifier Static : boolean = FALSE, Scope(property method), Flavor(DisableOverride);
+
+Qualifier Syntax : string = null, Scope(property reference method parameter);
+
+Qualifier SyntaxType : string = null, Scope(property reference method 
+    parameter);
+
+Qualifier Terminal : boolean = FALSE, Scope(class);
+
+Qualifier TriggerType : string = null, Scope(class association indication 
+    property reference method);
+
+Qualifier Units : string = null, Scope(property method parameter), 
+    Flavor(Translatable);
+
+Qualifier UnknownValues : string[] = null, Scope(property), Flavor(DisableOverride);
+
+Qualifier UnsupportedValues : string[] = null, Scope(property), Flavor(DisableOverride);
+
+Qualifier ValueMap : string[] = null, Scope(property method parameter);
+
+Qualifier Values : string[] = null, Scope(property method parameter), 
+    Flavor(Translatable);
+
+Qualifier Version : string = "V2.5", Scope(class association indication), 
+    Flavor(Translatable);
+
+Qualifier Weak : boolean = FALSE, Scope(reference), Flavor(DisableOverride);
+
+Qualifier Write : boolean = FALSE, Scope(property);
+9. +++++ getClass Operation
+67 class names  returned.
+CIM_ActsAsSpare
+CIM_CollectedCollections
+CIM_CollectionConfiguration
+CIM_CollectionSetting
+CIM_CompatibleProduct
+CIM_Component
+CIM_ConfigurationComponent
+CIM_Dependency
+CIM_DependencyContext
+CIM_ElementCapabilities
+CIM_ElementConfiguration
+CIM_ElementLocation
+CIM_ElementProfile
+CIM_ElementSetting
+CIM_ElementSettingData
+CIM_ElementStatisticalData
+CIM_Error
+CIM_FRUIncludesProduct
+CIM_FRUPhysicalElements
+CIM_InstalledSoftwareIdentity
+CIM_LogicalIdentity
+CIM_ManagedElement
+CIM_MemberOfCollection
+CIM_OwningCollectionElement
+CIM_ParameterValueSources
+CIM_ParametersForMethod
+CIM_ProductFRU
+CIM_ProductParentChild
+CIM_ProductPhysicalElements
+CIM_ProductProductDependency
+CIM_ProductSupport
+CIM_RelatedStatisticalData
+CIM_RelatedStatistics
+CIM_ReplaceableProductFRU
+CIM_SAPAvailableForElement
+CIM_ServiceAffectsElement
+CIM_ServiceAvailableToElement
+CIM_SettingContext
+CIM_SettingsDefineState
+CIM_Statistics
+CIM_Synchronized
+CIM_SystemSettingContext
+PG_TestElement
+WET_CollectedCollections
+WET_CollectionConfiguration
+WET_CollectionSetting
+WET_CompatibleProduct
+WET_Component
+WET_ConfigurationComponent
+WET_Dependency
+WET_DependencyContext
+WET_ElementConfiguration
+WET_ElementSetting
+WET_FRUIncludesProduct
+WET_FRUPhysicalElements
+WET_LogicalIdentity
+WET_ManagedElement
+WET_MemberOfCollection
+WET_ProductFRU
+WET_ProductParentChild
+WET_ProductPhysicalElements
+WET_ProductProductDependency
+WET_ProductSupport
+WET_RelatedStatistics
+WET_SettingContext
+WET_Statistics
+WET_Synchronized
+
+//    Class CIM_ManagedElement
+
+    [Abstract : Restricted, 
+    Version ("2.19.0") : Restricted, Translatable, 
+    UMLPackagePath ("CIM::Core::CoreElements"), 
+    Description ("ManagedElement is an abstract class that provides "
+        "a common superclass (or top of the inheritance tree) for the "
+        "non-association classes in the CIM Schema.") : Translatable]
+class CIM_ManagedElement
+{
+    [Description ("InstanceID is an optional property that may be used "
+        "to opaquely and uniquely identify an instance of this class "
+        "within the scope of the instantiating Namespace. Various subclasses "
+        "of this class may override this property to make it required, "
+        "or a key. Such subclasses may also modify the preferred algorithms "
+        "for ensuring uniqueness that are defined below.\nTo ensure "
+        "uniqueness within the NameSpace, the value of InstanceID should "
+        "be constructed using the following \"preferred\" algorithm: "
+        "\n<OrgID>:<LocalID> \nWhere <OrgID> and <LocalID> are separated "
+        "by a colon (:), and where <OrgID> must include a copyrighted, "
+        "trademarked, or otherwise unique name that is owned by the "
+        "business entity that is creating or defining the InstanceID "
+        "or that is a registered ID assigned to the business entity "
+        "by a recognized global authority. (This requirement is similar "
+        "to the <Schema Name>_<Class Name> structure of Schema class "
+        "names.) In addition, to ensure uniqueness, <OrgID> must not "
+        "contain a colon (:). When using this algorithm, the first colon "
+        "to appear in InstanceID must appear between <OrgID> and <LocalID>. "
+        "\n<LocalID> is chosen by the business entity and should not "
+        "be reused to identify different underlying (real-world) elements. "
+        "If not null and the above \"preferred\" algorithm is not used, "
+        "the defining entity must assure that the resulting InstanceID "
+        "is not reused across any InstanceIDs produced by this or other "
+        "providers for the NameSpace of this instance. \nIf not set "
+        "to null for DMTF-defined instances, the \"preferred\" algorithm "
+        "must be used with the <OrgID> set to CIM.") : Translatable]
+string InstanceID;
+    [Description ("The Caption property is a short textual description "
+        "(one- line string) of the object.") : Translatable, 
+    MaxLen (64)]
+string Caption;
+    [Description ("The Description property provides a textual description "
+        "of the object.") : Translatable]
+string Description;
+    [Description ("A user-friendly name for the object. This property allows "
+        "each instance to define a user-friendly name in addition to "
+        "its key properties, identity data, and description information. "
+        "\nNote that the Name property of ManagedSystemElement is also "
+        "defined as a user-friendly name. But, it is often subclassed "
+        "to be a Key. It is not reasonable that the same property can "
+        "convey both identity and a user-friendly name, without inconsistencies. "
+        "Where Name exists and is not a Key (such as for instances of "
+        "LogicalDevice), the same information can be present in both "
+        "the Name and ElementName properties. Note that if there is "
+        "an associated instance of CIM_EnabledLogicalElementCapabilities, "
+        "restrictions on this properties may exist as defined in ElementNameMask "
+        "and MaxElementNameLen properties defined in that class.") : 
+        Translatable]
+string ElementName;
+};
+<CLASS NAME="CIM_ManagedElement">
+    <QUALIFIER NAME="Abstract" TYPE="boolean" TOSUBCLASS="false">
+        <VALUE>
+            TRUE
+        </VALUE>
+    </QUALIFIER>
+    <QUALIFIER NAME="Version" TYPE="string" TOSUBCLASS="false" TRANSLATABLE="true">
+        <VALUE>
+            2.19.0
+        </VALUE>
+    </QUALIFIER>
+    <QUALIFIER NAME="UMLPackagePath" TYPE="string">
+        <VALUE>
+            CIM::Core::CoreElements
+        </VALUE>
+    </QUALIFIER>
+    <QUALIFIER NAME="Description" TYPE="string" TRANSLATABLE="true">
+        <VALUE>
+            ManagedElement is an abstract class that provides a common superclass (or top of the inheritance tree) for the non-association classes in the CIM Schema.
+        </VALUE>
+    </QUALIFIER>
+    <PROPERTY NAME="InstanceID" TYPE="string">
+        <QUALIFIER NAME="Description" TYPE="string" TRANSLATABLE="true">
+            <VALUE>
+                InstanceID is an optional property that may be used to opaquely and uniquely identify an instance of this class within the scope of the instantiating Namespace. Various subclasses of this class may override this property to make it required, or a key. Such subclasses may also modify the preferred algorithms for ensuring uniqueness that are defined below.&#10;To ensure uniqueness within the NameSpace, the value of InstanceID should be constructed using the following &quot;preferred&quot; algorithm: &#10;&lt;OrgID&gt;:&lt;LocalID&gt; &#10;Where &lt;OrgID&gt; and &lt;LocalID&gt; are separated by a colon (:), and where &lt;OrgID&gt; must include a copyrighted, trademarked, or otherwise unique name that is owned by the business entity that is creating or defining the InstanceID or that is a registered ID assigned to the business entity by a recognized global authority. (This requirement is similar to the &lt;Schema Name&gt;_&lt;Class Name&gt; structure of Schema class names.) In addition, to ensure uniqueness, &lt;OrgID&gt; must not contain a colon (:). When using this algorithm, the first colon to appear in InstanceID must appear between &lt;OrgID&gt; and &lt;LocalID&gt;. &#10;&lt;LocalID&gt; is chosen by the business entity and should not be reused to identify different underlying (real-world) elements. If not null and the above &quot;preferred&quot; algorithm is not used, the defining entity must assure that the resulting InstanceID is not reused across any InstanceIDs produced by this or other providers for the NameSpace of this instance. &#10;If not set to null for DMTF-defined instances, the &quot;preferred&quot; algorithm must be used with the &lt;OrgID&gt; set to CIM.
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY>
+    <PROPERTY NAME="Caption" TYPE="string">
+        <QUALIFIER NAME="Description" TYPE="string" TRANSLATABLE="true">
+            <VALUE>
+                The Caption property is a short textual description (one- line string) of the object.
+            </VALUE>
+        </QUALIFIER>
+        <QUALIFIER NAME="MaxLen" TYPE="uint32">
+            <VALUE>
+                64
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY>
+    <PROPERTY NAME="Description" TYPE="string">
+        <QUALIFIER NAME="Description" TYPE="string" TRANSLATABLE="true">
+            <VALUE>
+                The Description property provides a textual description of the object.
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY>
+    <PROPERTY NAME="ElementName" TYPE="string">
+        <QUALIFIER NAME="Description" TYPE="string" TRANSLATABLE="true">
+            <VALUE>
+                A user-friendly name for the object. This property allows each instance to define a user-friendly name in addition to its key properties, identity data, and description information. &#10;Note that the Name property of ManagedSystemElement is also defined as a user-friendly name. But, it is often subclassed to be a Key. It is not reasonable that the same property can convey both identity and a user-friendly name, without inconsistencies. Where Name exists and is not a Key (such as for instances of LogicalDevice), the same information can be present in both the Name and ElementName properties. Note that if there is an associated instance of CIM_EnabledLogicalElementCapabilities, restrictions on this properties may exist as defined in ElementNameMask and MaxElementNameLen properties defined in that class.
+            </VALUE>
+        </QUALIFIER>
+    </PROPERTY>
+</CLASS>
+1. +++++ Test For Reference params
+2. +++++ Test Getproperty and setProperty
+Name = Bob
+Test_CLITestProviderClass.Id="Mike"
+path= Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Mike";
+Name = "Bob";
+requestInputParameters = "propertyList=Id, Name, requestInputParameters, "
+    "scalBool, scalUint8, scalSint8, scalUint16, scalSint16, scalUint32, "
+    "scalSint32, scalUint64, scalSint64, scalReal32, scalReal64, scalString, "
+    "scalDateTime, defaultBool, defaultUint8, defaultSint8, defaultUint16, "
+    "defaultSint16, defaultUint32, defaultSint32, defaultUint64, defaultSint64, "
+    "defaultReal32, defaultReal64, defaultString, defaultDateTime, arrayBool, "
+    "arrayUint8, arraySint8, arrayUint16, arraySint16, arrayUint32, "
+    "arraySint32, arrayUint64, arraySint64, arrayReal32, arrayReal64, "
+    "arrayString, arrayDateTime; includeQualifiers=false; includeClassOrigin=false";
+scalBool = TRUE;
+scalUint8 = 220;
+scalSint8 = 124;
+scalUint16 = 100;
+scalSint16 = 100;
+scalUint32 = 100;
+scalSint32 = 100;
+scalUint64 = 100;
+scalSint64 = NULL;
+scalReal32 = 1.0000000000000000e+02;
+scalReal64 = 1.0000000000000000e+02;
+scalString = "teststring";
+scalDateTime = "19991224120000.000000+360";
+defaultBool = TRUE;
+defaultUint8 = 4;
+defaultSint8 = 4;
+defaultUint16 = 4;
+defaultSint16 = 4;
+defaultUint32 = 4;
+defaultSint32 = 4;
+defaultUint64 = 4;
+defaultSint64 = 4;
+defaultReal32 = NULL;
+defaultReal64 = NULL;
+defaultString = "test\"embedded\"quote";
+defaultDateTime = NULL;
+arrayBool = {TRUE, FALSE, TRUE};
+arrayUint8 = {4, 128, 240};
+arraySint8 = {4, 126, -126};
+arrayUint16 = {4, 128, 240};
+arraySint16 = {4, 126, -126};
+arrayUint32 = {4, 128, 240};
+arraySint32 = {4, 126, -126};
+arrayUint64 = {4, 128, 240};
+arraySint64 = NULL;
+arrayReal32 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayReal64 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayString = {"First", "Second", "Third"};
+arrayDateTime = {"19991224120000.000000+360", "19991224120000.000000+360", 
+    "19991224120000.000000+360"};
+};
+3. +++++ Tests Instances create Instance
+Returned Path  Test_CLITestProviderClass.Id="ScalarTest"
+test instance Test_CLITestProviderClass.Id="ScalarTest" OK
+Returned Path  Test_CLITestProviderClass.Id="arrayTest"
+test instance Test_CLITestProviderClass.Id="arrayTest" OK
+Test_CLITestProviderClass.Id="Mike"
+Test_CLITestProviderClass.Id="ScalarTest"
+Test_CLITestProviderClass.Id="arrayTest"
+path= Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Mike";
+Name = "Bob";
+requestInputParameters = "propertyList=Id, Name, requestInputParameters, "
+    "scalBool, scalUint8, scalSint8, scalUint16, scalSint16, scalUint32, "
+    "scalSint32, scalUint64, scalSint64, scalReal32, scalReal64, scalString, "
+    "scalDateTime, defaultBool, defaultUint8, defaultSint8, defaultUint16, "
+    "defaultSint16, defaultUint32, defaultSint32, defaultUint64, defaultSint64, "
+    "defaultReal32, defaultReal64, defaultString, defaultDateTime, arrayBool, "
+    "arrayUint8, arraySint8, arrayUint16, arraySint16, arrayUint32, "
+    "arraySint32, arrayUint64, arraySint64, arrayReal32, arrayReal64, "
+    "arrayString, arrayDateTime; includeQualifiers=false; includeClassOrigin=false";
+scalBool = TRUE;
+scalUint8 = 220;
+scalSint8 = 124;
+scalUint16 = 100;
+scalSint16 = 100;
+scalUint32 = 100;
+scalSint32 = 100;
+scalUint64 = 100;
+scalSint64 = NULL;
+scalReal32 = 1.0000000000000000e+02;
+scalReal64 = 1.0000000000000000e+02;
+scalString = "teststring";
+scalDateTime = "19991224120000.000000+360";
+defaultBool = TRUE;
+defaultUint8 = 4;
+defaultSint8 = 4;
+defaultUint16 = 4;
+defaultSint16 = 4;
+defaultUint32 = 4;
+defaultSint32 = 4;
+defaultUint64 = 4;
+defaultSint64 = 4;
+defaultReal32 = NULL;
+defaultReal64 = NULL;
+defaultString = "test\"embedded\"quote";
+defaultDateTime = NULL;
+arrayBool = {TRUE, FALSE, TRUE};
+arrayUint8 = {4, 128, 240};
+arraySint8 = {4, 126, -126};
+arrayUint16 = {4, 128, 240};
+arraySint16 = {4, 126, -126};
+arrayUint32 = {4, 128, 240};
+arraySint32 = {4, 126, -126};
+arrayUint64 = {4, 128, 240};
+arraySint64 = NULL;
+arrayReal32 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayReal64 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayString = {"First", "Second", "Third"};
+arrayDateTime = {"19991224120000.000000+360", "19991224120000.000000+360", 
+    "19991224120000.000000+360"};
+};
+path= Test_CLITestProviderClass.Id="ScalarTest"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "ScalarTest";
+scalBool = TRUE;
+scalUint8 = 12;
+scalSint8 = 12;
+scalUint16 = 500;
+scalSint16 = 500;
+scalUint32 = 9999;
+scalSint32 = 9999;
+scalUint64 = 99999;
+scalString = "testString";
+requestInputParameters = "propertyList=Id, Name, requestInputParameters, "
+    "scalBool, scalUint8, scalSint8, scalUint16, scalSint16, scalUint32, "
+    "scalSint32, scalUint64, scalSint64, scalReal32, scalReal64, scalString, "
+    "scalDateTime, defaultBool, defaultUint8, defaultSint8, defaultUint16, "
+    "defaultSint16, defaultUint32, defaultSint32, defaultUint64, defaultSint64, "
+    "defaultReal32, defaultReal64, defaultString, defaultDateTime, arrayBool, "
+    "arrayUint8, arraySint8, arrayUint16, arraySint16, arrayUint32, "
+    "arraySint32, arrayUint64, arraySint64, arrayReal32, arrayReal64, "
+    "arrayString, arrayDateTime; includeQualifiers=false; includeClassOrigin=false";
+};
+path= Test_CLITestProviderClass.Id="arrayTest"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "arrayTest";
+scalString = "testString";
+scalDateTime = "19991224120000.000000+360";
+arrayBool = {TRUE, TRUE, TRUE, FALSE, TRUE};
+arrayUint8 = {12};
+arraySint8 = {-127, 0, 12, 127};
+arrayUint32 = {99, 0, 31000, 63000, 4294967295};
+arraySint32 = {-32000, 0, 32000, -2147483648, 2147483647};
+arrayUint64 = {99, 0, 31000, 63000, 18446744073709551615};
+arraySint64 = {-32000, 0, 32000, -9223372036854775808};
+requestInputParameters = "propertyList=Id, Name, requestInputParameters, "
+    "scalBool, scalUint8, scalSint8, scalUint16, scalSint16, scalUint32, "
+    "scalSint32, scalUint64, scalSint64, scalReal32, scalReal64, scalString, "
+    "scalDateTime, defaultBool, defaultUint8, defaultSint8, defaultUint16, "
+    "defaultSint16, defaultUint32, defaultSint32, defaultUint64, defaultSint64, "
+    "defaultReal32, defaultReal64, defaultString, defaultDateTime, arrayBool, "
+    "arrayUint8, arraySint8, arrayUint16, arraySint16, arrayUint32, "
+    "arraySint32, arrayUint64, arraySint64, arrayReal32, arrayReal64, "
+    "arrayString, arrayDateTime; includeQualifiers=false; includeClassOrigin=false";
+};
+4. +++++ Test Instances modify Instance
+modified
+test instance Test_CLITestProviderClass.Id="ScalarTest" OK
+modified
+test instance Test_CLITestProviderClass.Id="ScalarTest" OK
+5. +++++ Test delete instance
+Returned Path  Test_CLITestProviderClass.Id="ScalarTest"
+test instance Test_CLITestProviderClass.Id="ScalarTest" OK
+6. +++++ Test invokeMethod
+Return Value= 0
+10. +++++ testPropertyListOptions
+
+//    Class CIM_ManagedElement
+
+    [Abstract : Restricted, 
+    Version ("2.19.0") : Restricted, Translatable, 
+    UMLPackagePath ("CIM::Core::CoreElements"), 
+    Description ("ManagedElement is an abstract class that provides "
+        "a common superclass (or top of the inheritance tree) for the "
+        "non-association classes in the CIM Schema.") : Translatable]
+class CIM_ManagedElement
+{
+    [Description ("The Caption property is a short textual description "
+        "(one- line string) of the object.") : Translatable, 
+    MaxLen (64)]
+string Caption;
+};
+
+//    Class CIM_ManagedElement
+
+    [Abstract : Restricted, 
+    Version ("2.19.0") : Restricted, Translatable, 
+    UMLPackagePath ("CIM::Core::CoreElements"), 
+    Description ("ManagedElement is an abstract class that provides "
+        "a common superclass (or top of the inheritance tree) for the "
+        "non-association classes in the CIM Schema.") : Translatable]
+class CIM_ManagedElement
+{
+    [Description ("The Caption property is a short textual description "
+        "(one- line string) of the object.") : Translatable, 
+    MaxLen (64)]
+string Caption;
+    [Description ("The Description property provides a textual description "
+        "of the object.") : Translatable]
+string Description;
+};
+
+//    Class CIM_ManagedElement
+
+    [Abstract : Restricted, 
+    Version ("2.19.0") : Restricted, Translatable, 
+    UMLPackagePath ("CIM::Core::CoreElements"), 
+    Description ("ManagedElement is an abstract class that provides "
+        "a common superclass (or top of the inheritance tree) for the "
+        "non-association classes in the CIM Schema.") : Translatable]
+class CIM_ManagedElement
+{
+    [Description ("The Caption property is a short textual description "
+        "(one- line string) of the object.") : Translatable, 
+    MaxLen (64)]
+string Caption;
+    [Description ("The Description property provides a textual description "
+        "of the object.") : Translatable]
+string Description;
+    [Description ("A user-friendly name for the object. This property allows "
+        "each instance to define a user-friendly name in addition to "
+        "its key properties, identity data, and description information. "
+        "\nNote that the Name property of ManagedSystemElement is also "
+        "defined as a user-friendly name. But, it is often subclassed "
+        "to be a Key. It is not reasonable that the same property can "
+        "convey both identity and a user-friendly name, without inconsistencies. "
+        "Where Name exists and is not a Key (such as for instances of "
+        "LogicalDevice), the same information can be present in both "
+        "the Name and ElementName properties. Note that if there is "
+        "an associated instance of CIM_EnabledLogicalElementCapabilities, "
+        "restrictions on this properties may exist as defined in ElementNameMask "
+        "and MaxElementNameLen properties defined in that class.") : 
+        Translatable]
+string ElementName;
+};
+
+//    Class CIM_ManagedElement
+
+    [Abstract : Restricted, 
+    Version ("2.19.0") : Restricted, Translatable, 
+    UMLPackagePath ("CIM::Core::CoreElements"), 
+    Description ("ManagedElement is an abstract class that provides "
+        "a common superclass (or top of the inheritance tree) for the "
+        "non-association classes in the CIM Schema.") : Translatable]
+class CIM_ManagedElement
+{
+};
+path= Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+scalBool = TRUE;
+arrayUint64 = {4, 128, 240};
+};
+path= Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+};
+path= Test_CLITestProviderClass
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+scalBool = TRUE;
+scalString = "teststring";
+arrayUint64 = {4, 128, 240};
+};
+12. +++++ test getInstance Operation
+path= Test_CLITestProviderClass
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Mike";
+Name = "Bob";
+requestInputParameters = "propertyList=NULL; includeQualifiers=false; "
+    "includeClassOrigin=false";
+scalBool = TRUE;
+scalUint8 = 220;
+scalSint8 = 124;
+scalUint16 = 100;
+scalSint16 = 100;
+scalUint32 = 100;
+scalSint32 = 100;
+scalUint64 = 100;
+scalSint64 = NULL;
+scalReal32 = 1.0000000000000000e+02;
+scalReal64 = 1.0000000000000000e+02;
+scalString = "teststring";
+scalDateTime = "19991224120000.000000+360";
+defaultBool = TRUE;
+defaultUint8 = 4;
+defaultSint8 = 4;
+defaultUint16 = 4;
+defaultSint16 = 4;
+defaultUint32 = 4;
+defaultSint32 = 4;
+defaultUint64 = 4;
+defaultSint64 = 4;
+defaultReal32 = NULL;
+defaultReal64 = NULL;
+defaultString = "test\"embedded\"quote";
+defaultDateTime = NULL;
+arrayBool = {TRUE, FALSE, TRUE};
+arrayUint8 = {4, 128, 240};
+arraySint8 = {4, 126, -126};
+arrayUint16 = {4, 128, 240};
+arraySint16 = {4, 126, -126};
+arrayUint32 = {4, 128, 240};
+arraySint32 = {4, 126, -126};
+arrayUint64 = {4, 128, 240};
+arraySint64 = NULL;
+arrayReal32 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayReal64 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayString = {"First", "Second", "Third"};
+arrayDateTime = {"19991224120000.000000+360", "19991224120000.000000+360", 
+    "19991224120000.000000+360"};
+};
+path= Test_CLITestProviderClass
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Name = "Bob";
+scalBool = TRUE;
+};
+path= Test_CLITestProviderClass
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Name = "Bob";
+scalBool = TRUE;
+};
+13. +++++ test TestInstance Operations
+test instance Test_CLITestProviderClass.Id="Mike" OK
+test instance Test_CLITestProviderClass.Id="Mike" OK
+test instance Test_CLITestProviderClass.Id="Mike" OK
+test instance Test_CLITestProviderClass.Id="Mike" OK
+test instance Test_CLITestProviderClass.Id="Mike" OK
+test instance Test_CLITestProviderClass.Id="Mike" OK
+test instance Test_CLITestProviderClass.Id="Mike" OK
+14. +++++ test Integer Variations
+Returned Path  Test_CLITestProviderClass.Id="integerVariationTest"
+path= Test_CLITestProviderClass
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "integerVariationTest";
+scalBool = TRUE;
+scalUint8 = 12;
+scalUint16 = 100;
+scalUint32 = 9999;
+scalUint64 = 99999;
+arrayUint32 = {99, 0, 31000, 63000, 4294967295};
+requestInputParameters = "propertyList=NULL; includeQualifiers=false; "
+    "includeClassOrigin=false";
+};
+test instance Test_CLITestProviderClass.Id="integerVariationTest" OK
+test instance Test_CLITestProviderClass.Id="integerVariationTest" OK
+test instance Test_CLITestProviderClass.Id="integerVariationTest" OK
+test instance Test_CLITestProviderClass.Id="integerVariationTest" OK
+15. +++++ referencetests
+
+//    Class Test_CLITestProviderLinkClass
+
+class Test_CLITestProviderLinkClass
+{
+reference parent;
+reference child;
+string requestInputParameters;
+};
+1 referenceNames
+//ChangedHostName/test/TestProvider:Test_CLITestProviderLinkClass
+Return Value= 0
+path= //localhost/test/TestProvider:Test_CLITestProviderLinkClass.child="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"",parent="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\""
+
+//Instance of Test_CLITestProviderLinkClass
+instance of Test_CLITestProviderLinkClass
+{
+parent = "//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"";
+child = "//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"";
+requestInputParameters = "role=; resultClass=Test_CLITestProviderLinkClass; "
+    "includeQualifiers=false; includeClassOrigin=false; propertyList=NULL";
+};
+path= //localhost/test/TestProvider:Test_CLITestProviderLinkClass.child="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"",parent="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\""
+
+//Instance of Test_CLITestProviderLinkClass
+instance of Test_CLITestProviderLinkClass
+{
+parent = "//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"";
+child = "//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"";
+requestInputParameters = "role=parent; resultClass=Test_CLITestProviderLinkClass; "
+    "includeQualifiers=false; includeClassOrigin=false; propertyList=NULL";
+};
+1 referenceNames
+//localhost/test/TestProvider:Test_CLITestProviderLinkClass.child="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"",parent="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\""
+path= //localhost/test/TestProvider:Test_CLITestProviderLinkClass.child="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\"",parent="//localhost/test/TestProvider:Test_CLITestProviderClass.Id=\"Mike\""
+
+//Instance of Test_CLITestProviderLinkClass
+instance of Test_CLITestProviderLinkClass
+{
+requestInputParameters = "role=child; resultClass=Test_CLITestProviderLinkClass; "
+    "includeQualifiers=false; includeClassOrigin=false; propertyList=requestInputParameters";
+};
+Return Value= 0
+16. +++++ associationtests
+
+//    Class Test_CLITestProviderClass
+
+class Test_CLITestProviderClass
+{
+string Id;
+string Name;
+string requestInputParameters;
+boolean scalBool;
+uint8 scalUint8;
+sint8 scalSint8;
+uint16 scalUint16;
+sint16 scalSint16;
+uint32 scalUint32;
+sint32 scalSint32;
+uint64 scalUint64;
+sint64 scalSint64;
+real32 scalReal32;
+real64 scalReal64;
+string scalString;
+datetime scalDateTime;
+boolean defaultBool = TRUE;
+uint8 defaultUint8 = 4;
+sint8 defaultSint8 = 4;
+uint16 defaultUint16 = 4;
+sint16 defaultSint16 = 4;
+uint32 defaultUint32 = 4;
+sint32 defaultSint32 = 4;
+uint64 defaultUint64 = 4;
+sint64 defaultSint64 = 4;
+real32 defaultReal32;
+real64 defaultReal64;
+string defaultString = "test\"embedded\"quote";
+datetime defaultDateTime;
+boolean arrayBool[];
+uint8 arrayUint8[];
+sint8 arraySint8[];
+uint16 arrayUint16[];
+sint16 arraySint16[];
+uint32 arrayUint32[];
+sint32 arraySint32[];
+uint64 arrayUint64[];
+sint64 arraySint64[];
+real32 arrayReal32[];
+real64 arrayReal64[];
+string arrayString[];
+datetime arrayDateTime[];
+uint32 ReferenceParamTest(uint32 InParam1, uint32 OutParam2);
+uint32 InOutParamTest(boolean scalBool, uint8 scalUint8, sint8 scalSint8, 
+    uint16 scalUint16, sint16 scalSint16, uint32 scalUint32, sint32 
+    scalSint32, uint64 scalUint64, real32 scalReal32, real64 scalReal64, 
+    string scalString, datetime scalDateTime, boolean arrayBool[], 
+    uint8 arrayUint8[], sint8 arraySint8[], uint16 arrayUint16[], sint16 
+    arraySint16[], uint32 arrayUint32[], sint32 arraySint32[], uint64 
+    arrayUint64[], real32 arrayReal32[], real64 arrayReal64[], string 
+    arrayString[], datetime arrayDateTime[], uint32 returnValue);
+uint32 FullParamTest(boolean inScalBool, uint8 inScalUint8, sint8 inScalSint8, 
+    uint16 inScalUint16, sint16 inScalSint16, uint32 inScalUint32, 
+    sint32 inScalSint32, uint64 inScalUint64, real32 inScalReal32, 
+    real64 inScalReal64, string inScalString, datetime inScalDateTime, 
+    boolean outScalBool, uint8 outScalUint8, sint8 outScalSint8, uint16 
+    outScalUint16, sint16 outScalSint16, uint32 outScalUint32, sint32 
+    outScalSint32, uint64 outScalUint64, real32 outScalReal32, real64 
+    outScalReal64, string outScalString, datetime outScalDateTime);
+uint32 setProviderParameters(string substituteHostName);
+uint32 resetProviderParameters();
+};
+1 associator names
+//ChangedHostName/test/TestProvider:Test_CLITestProviderClass
+Return Value= 0
+path= //localhost/test/TestProvider:Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Mike";
+Name = "Bob";
+requestInputParameters = "role=; resultRole=; associationClass=Test_CLITestProviderLinkClass; "
+    "resultClass=; includeQualifiers=false; includeClassOrigin=false; "
+    "propertyList=NULL";
+scalBool = TRUE;
+scalUint8 = 220;
+scalSint8 = 124;
+scalUint16 = 100;
+scalSint16 = 100;
+scalUint32 = 100;
+scalSint32 = 100;
+scalUint64 = 100;
+scalSint64 = NULL;
+scalReal32 = 1.0000000000000000e+02;
+scalReal64 = 1.0000000000000000e+02;
+scalString = "teststring";
+scalDateTime = "19991224120000.000000+360";
+defaultBool = TRUE;
+defaultUint8 = 4;
+defaultSint8 = 4;
+defaultUint16 = 4;
+defaultSint16 = 4;
+defaultUint32 = 4;
+defaultSint32 = 4;
+defaultUint64 = 4;
+defaultSint64 = 4;
+defaultReal32 = NULL;
+defaultReal64 = NULL;
+defaultString = "test\"embedded\"quote";
+defaultDateTime = NULL;
+arrayBool = {TRUE, FALSE, TRUE};
+arrayUint8 = {4, 128, 240};
+arraySint8 = {4, 126, -126};
+arrayUint16 = {4, 128, 240};
+arraySint16 = {4, 126, -126};
+arrayUint32 = {4, 128, 240};
+arraySint32 = {4, 126, -126};
+arrayUint64 = {4, 128, 240};
+arraySint64 = NULL;
+arrayReal32 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayReal64 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayString = {"First", "Second", "Third"};
+arrayDateTime = {"19991224120000.000000+360", "19991224120000.000000+360", 
+    "19991224120000.000000+360"};
+};
+1 associator names
+//localhost/test/TestProvider:Test_CLITestProviderClass.Id="Mike"
+path= //localhost/test/TestProvider:Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+};
+path= //localhost/test/TestProvider:Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+requestInputParameters = "role=child; resultRole=parent; associationClass=Test_CLITestProviderLinkClass; "
+    "resultClass=Test_CLITestProviderClass; includeQualifiers=false; "
+    "includeClassOrigin=false; propertyList=requestInputParameters";
+};
+Return Value= 0
+18. +++++ nullvaluetests
+Returned Path  Test_CLITestProviderClass.Id="NullValueTest"
+path= Test_CLITestProviderClass
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "NullValueTest";
+scalBool = NULL;
+scalUint32 = NULL;
+scalString = NULL;
+defaultBool = TRUE;
+defaultUint32 = 4;
+defaultString = "test\"embedded\"quote";
+requestInputParameters = "propertyList=NULL; includeQualifiers=false; "
+    "includeClassOrigin=false";
+};
+test instance Test_CLITestProviderClass.Id="NullValueTest" OK
+Returned Path  Test_CLITestProviderClass.Id="EmptyStringTest"
+path= Test_CLITestProviderClass
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "EmptyStringTest";
+scalUint32 = NULL;
+scalUint64 = 99999;
+scalString = NULL;
+defaultString = "";
+arrayUint32 = {99, 0, 31000, 63000, 4294967295};
+requestInputParameters = "propertyList=NULL; includeQualifiers=false; "
+    "includeClassOrigin=false";
+};
+test instance Test_CLITestProviderClass.Id="EmptyStringTest" OK
+20. +++++ objectCounterTests
+Return Value= 0
+1 instances of class Test_CLITestProviderClass returned.
+1  Test_CLITestProviderClass returned.
+path= Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Mike";
+Name = "Bob";
+requestInputParameters = "propertyList=Id, Name, requestInputParameters, "
+    "scalBool, scalUint8, scalSint8, scalUint16, scalSint16, scalUint32, "
+    "scalSint32, scalUint64, scalSint64, scalReal32, scalReal64, scalString, "
+    "scalDateTime, defaultBool, defaultUint8, defaultSint8, defaultUint16, "
+    "defaultSint16, defaultUint32, defaultSint32, defaultUint64, defaultSint64, "
+    "defaultReal32, defaultReal64, defaultString, defaultDateTime, arrayBool, "
+    "arrayUint8, arraySint8, arrayUint16, arraySint16, arrayUint32, "
+    "arraySint32, arrayUint64, arraySint64, arrayReal32, arrayReal64, "
+    "arrayString, arrayDateTime; includeQualifiers=false; includeClassOrigin=false";
+scalBool = TRUE;
+scalUint8 = 220;
+scalSint8 = 124;
+scalUint16 = 100;
+scalSint16 = 100;
+scalUint32 = 100;
+scalSint32 = 100;
+scalUint64 = 100;
+scalSint64 = NULL;
+scalReal32 = 1.0000000000000000e+02;
+scalReal64 = 1.0000000000000000e+02;
+scalString = "teststring";
+scalDateTime = "19991224120000.000000+360";
+defaultBool = TRUE;
+defaultUint8 = 4;
+defaultSint8 = 4;
+defaultUint16 = 4;
+defaultSint16 = 4;
+defaultUint32 = 4;
+defaultSint32 = 4;
+defaultUint64 = 4;
+defaultSint64 = 4;
+defaultReal32 = NULL;
+defaultReal64 = NULL;
+defaultString = "test\"embedded\"quote";
+defaultDateTime = NULL;
+arrayBool = {TRUE, FALSE, TRUE};
+arrayUint8 = {4, 128, 240};
+arraySint8 = {4, 126, -126};
+arrayUint16 = {4, 128, 240};
+arraySint16 = {4, 126, -126};
+arrayUint32 = {4, 128, 240};
+arraySint32 = {4, 126, -126};
+arrayUint64 = {4, 128, 240};
+arraySint64 = NULL;
+arrayReal32 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayReal64 = {4.0000000000000000e+00, 1.2800000000000000e+02, 2.4000000000000000e+02};
+arrayString = {"First", "Second", "Third"};
+arrayDateTime = {"19991224120000.000000+360", "19991224120000.000000+360", 
+    "19991224120000.000000+360"};
+};
+Test_CLITestProviderClass.Id="Mike"
+1 instances of class Test_CLITestProviderClass returned.
+Failed instances of class count test. Expected= 10 Received= 1
+1  Test_CLITestProviderClass returned.
+Failed  count test. Expected= 10 Received= 1
+1 associators  returned.
+Failed associators count test. Expected= 10 Received= 1
+1 references  returned.
+Failed references count test. Expected= 10 Received= 1
+1 associator names Test_CLITestProviderClass returned.
+Failed associator names count test. Expected= 10 Received= 1
+1 referenceNames Test_CLITestProviderClass returned.
+Failed referenceNames count test. Expected= 10 Received= 1
+Return Value= 0
+21. +++++ SortInstancesTest
+Test_CLITestProviderClass.Id="Andy"
+Test_CLITestProviderClass.Id="Fred"
+Test_CLITestProviderClass.Id="Judy"
+Test_CLITestProviderClass.Id="Mike"
+Test_CLITestProviderClass.Id="Norman"
+Test_CLITestProviderClass.Id="Thomas"
+Test_CLITestProviderClass.Id="Zed"
+path= Test_CLITestProviderClass.Id="Andy"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Andy";
+Name = "Blue";
+};
+path= Test_CLITestProviderClass.Id="Fred"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Fred";
+Name = "Jones";
+};
+path= Test_CLITestProviderClass.Id="Judy"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Judy";
+Name = "blah";
+};
+path= Test_CLITestProviderClass.Id="Mike"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Mike";
+Name = "Bob";
+};
+path= Test_CLITestProviderClass.Id="Norman"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Norman";
+Name = "Susan";
+};
+path= Test_CLITestProviderClass.Id="Thomas"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Thomas";
+Name = "Peter";
+};
+path= Test_CLITestProviderClass.Id="Zed"
+
+//Instance of Test_CLITestProviderClass
+instance of Test_CLITestProviderClass
+{
+Id = "Zed";
+Name = "Futz";
+};
+22. +++++ Test For enumerateClasses
+CIM_ActsAsSpare
+CIM_CollectedCollections
+CIM_CollectionConfiguration
+CIM_CollectionSetting
+CIM_CompatibleProduct
+CIM_Component
+CIM_ConfigurationComponent
+CIM_Dependency
+CIM_DependencyContext
+CIM_ElementCapabilities
+CIM_ElementConfiguration
+CIM_ElementLocation
+CIM_ElementProfile
+CIM_ElementSetting
+CIM_ElementSettingData
+CIM_ElementStatisticalData
+CIM_Error
+CIM_FRUIncludesProduct
+CIM_FRUPhysicalElements
+CIM_InstalledSoftwareIdentity
+CIM_LogicalIdentity
+CIM_ManagedElement
+CIM_MemberOfCollection
+CIM_OwningCollectionElement
+CIM_ParameterValueSources
+CIM_ParametersForMethod
+CIM_ProductFRU
+CIM_ProductParentChild
+CIM_ProductPhysicalElements
+CIM_ProductProductDependency
+CIM_ProductSupport
+CIM_RelatedStatisticalData
+CIM_RelatedStatistics
+CIM_ReplaceableProductFRU
+CIM_SAPAvailableForElement
+CIM_ServiceAffectsElement
+CIM_ServiceAvailableToElement
+CIM_SettingContext
+CIM_SettingsDefineState
+CIM_Statistics
+CIM_Synchronized
+CIM_SystemSettingContext
+PG_TestElement
+WET_CollectedCollections
+WET_CollectionConfiguration
+WET_CollectionSetting
+WET_CompatibleProduct
+WET_Component
+WET_ConfigurationComponent
+WET_Dependency
+WET_DependencyContext
+WET_ElementConfiguration
+WET_ElementSetting
+WET_FRUIncludesProduct
+WET_FRUPhysicalElements
+WET_LogicalIdentity
+WET_ManagedElement
+WET_MemberOfCollection
+WET_ProductFRU
+WET_ProductParentChild
+WET_ProductPhysicalElements
+WET_ProductProductDependency
+WET_ProductSupport
+WET_RelatedStatistics
+WET_SettingContext
+WET_Statistics
+WET_Synchronized
+23. +++++ Test For execQuery

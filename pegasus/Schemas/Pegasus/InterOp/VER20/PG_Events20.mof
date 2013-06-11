@@ -1,0 +1,126 @@
+//%LICENSE////////////////////////////////////////////////////////////////
+//
+// Licensed to The Open Group (TOG) under one or more contributor license
+// agreements.  Refer to the OpenPegasusNOTICE.txt file distributed with
+// this work for additional information regarding copyright ownership.
+// Each contributor licenses this file to you under the OpenPegasus Open
+// Source License; you may not use this file except in compliance with the
+// License.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+// CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+//////////////////////////////////////////////////////////////////////////
+// ===================================================================
+// Pragmas
+// ===================================================================
+#pragma locale ("en_US")
+
+// ===================================================================
+// PG_IndicationHandlerSNMPMapper
+// ===================================================================
+   [Description (
+     "PG_IndicationHandlerSNMPMapper describes the destination for "
+     "Indications to be delivered via SNMP trap/inform")]
+ 
+class PG_IndicationHandlerSNMPMapper: CIM_IndicationHandler
+{
+    [Required, Description (
+      "The address of the trap/inform destination.")]
+    string TargetHost;
+
+    [Required, Description (
+      "An enumerated integer describing the format and "
+      "interpretation of the TargetHost property."),
+      ValueMap {"1", "2", "3", "4", "5..65535"},
+      Values {"Other", "Host Name", "IPV4 Address",
+              "IPV6 Address", "Pegasus Reserved"}, 
+      ModelCorrespondence {
+         "PG_IndicationHandlerSNMPMapper.OtherTargetHostFormat"} ]
+    uint16 TargetHostFormat;
+
+    [Description (
+      "Describes the format when the value of TargetHostFormat "
+      "is set to 1 (\"Other\")."),
+      ModelCorrespondence {
+         "PG_IndicationHandlerSNMPMapper.TargetHostFormat"} ]
+    string OtherTargetHostFormat;   
+
+    [Description (
+      "The UDP port number to send the trap/inform. "
+      "The default is port 162.") ]
+    uint32 PortNumber = 162;   
+
+    [Required, Description (
+      "The SNMP version and format to use to send the "
+      "Indication."), 
+      ValueMap {"2", "3", "4", "5", "6", "7..65535"},
+      Values {"SNMPv1 Trap", "SNMPv2C Trap", 
+        "SNMPv2C Inform", "SNMPv3 Trap", "SNMPv3 Inform",
+        "Pegasus Reserved"} ]
+    uint16 SNMPVersion;
+
+    [Description (
+      "A human readable string that contains either "
+      "an SNMPv1 or SNMPv2C community name or "
+      "an SNMPv3 user name."),
+      ModelCorrespondence {
+         "PG_IndicationHandlerSNMPMapper.SNMPVersion"} ]
+    string SNMPSecurityName;
+
+    [Description (
+      "The SNMP Engine ID used to create the SNMPv3 inform. "
+      "The Engine ID of the Target Host is required when "
+      "sending an SNMPV3 inform.") ]
+    string SNMPEngineID;
+};
+
+// ====================================================================
+// PG_ListenerDestinationSystemLog
+// ====================================================================
+   [Description (
+	"PG_ListenerDestinationSystemLog is used to support event "
+	"notification delivery to a system log file")]
+
+class PG_ListenerDestinationSystemLog: CIM_ListenerDestination
+{
+};
+
+// ====================================================================
+// PG_ListenerDestinationEmail
+// ====================================================================
+   [Description (
+     "PG_ListenerDestinationEmail describes the addresses and subject for "
+     "Indications to be delivered via email.")] 
+
+class PG_ListenerDestinationEmail: CIM_ListenerDestination
+{
+      [Required, Description (
+          "An array containing the addresses of the To: field in the mail "
+          "message to which indications are delivered via e-mail.")]
+   string MailTo [];
+
+      [Description (
+          "An array containing the addresses of the Cc: field in the mail "
+          "message to which indications are delivered via e-mail.")]
+   string MailCc [];
+
+      [Required, Description (
+           "A string containing the Subject: field of the mail message.")]
+   string MailSubject;
+};

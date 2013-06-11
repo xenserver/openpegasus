@@ -1,0 +1,1338 @@
+cimcli(1)							     cimcli(1)
+
+
+
+NAME
+       cimcli - command line WBEM Client
+
+SYNOPSIS
+       cimcli [operation] [OperationTarget] [options] [valueParameters]
+
+       cimcli  is  available  for  all	platforms that support the Pegasus CIM
+       Server.
+
+
+DESCRIPTION
+       cimcli is a command line test tool for executing CIM client operations.
+       It  implements all of the DMTF CIM operations except for the modify and
+       create class/instance operations and includes several other  operations
+       that are useful in testing CIM Servers including getting all namespaces
+       and enumerating all instances in a namespace.
+
+       Each execution of cimcli invokes one or more CIM  Operations  with  the
+       command	parameters equivalent to the CIM Operations defined in the CIM
+       Operations over HTTP specification.
+
+       In addition to the basic CIM Operations defined in the DMTF  specifica
+       tion  (DMTF  DSP  0200), cimcli implements a number of other operations
+       that support testing and querying CIM servers  (ex.   an  operation  to
+       query  for  namespaces and another to get all instances in a namespace)
+       which require  multiple	CIM  Operations.   The	additional  operations
+       include:
+
+       1.     Enumerate  namespaces  (ns)  -  Returns a list of the namespaces
+	      available from the CIMOM.
+
+       2.     Enumerate all instance names (niall) - Returns  a  list  of  all
+	      instance names in the defined namespace.
+
+       3.     Turn  CIM  Server statistics on and off (DEPRECATED) - Turns the
+	      statistics flag in the Server CIMObjectManager Class on  or  off
+	      for the OpenPegasus server.  This enables and disables execution
+	      of statistics gathering in the server.  This command is retained
+	      for  compatibility  but is DEPRECATED and will be removed when a
+	      real alternative is included in the Pegasus release.
+
+	      NOTE: This operation may be CIMServer type  specific  since  not
+	      all CIMServers implement the statistics functions.
+
+       4.     Test  commands  (ti) - A cimcli operation that executes tests of
+	      the characteristics of an instance requeste from the CIM Server.
+	      This  operation  extend  the  capabilities of cimcli to actually
+	      compare information from the server with information in the com
+	      mand line input.
+
+	      The format of the cimcli command is generally:
+
+       cimcli [Operation] [OperationTarget] [options] [ValueParameters]
+
+	      Note that options may be interspersed with the [OperationTarget]
+	      parameter but that a) the ordering of [Operation] [OperationTar
+	      get]  is	fixed and any  [value parameters] MUST occur after the
+	      [OperationTarget] parameter.
+
+
+       [Operation]
+	      Defines the  operation to be executed. cimcli  executes  all  of
+	      the  DMTF  CIM  Operations  (ex. getclass) and a set of compound
+	      operation (enumeratenamespaces). There are two  forms  for  each
+	      [Operation]  definition,	a  short form typically two characters
+	      (i.e. gc) and the long form which is the full name of the opera
+	      tion  (i.e.  getclass).  The  complete  set of operations can be
+	      viewed by calling cimcli with the option -hc.
+
+       [OperationTarget]
+	      The [OperationTarget] is the name of the object  for  which  the
+	      the  operation is requested.  This parameter is operation depen
+	      dent.  For example, with	the  getClass  operation  the  [Opera
+	      tionTarget] is a CIM class name.	With the getInstance operation
+	      the object is a CIM instance name.  Note that some of  the  com
+	      mands  do not require an [OperationTarget] parameter.  Thus, for
+	      example, the [OperationTarget] is optional with  the  enumerate
+	      Classes  operation  as it is with the equivalent enumerateClass
+	      Names CIM operation.  Normally this is either a CIM  class  name
+	      or an instance name (classname plus keybindings).  In some oper
+	      ations one or the other is required.  In other  operations,  the
+	      behavior	of the operation is dependent on whether class name or
+	      instance name is supplied.
+
+	      The format for instance name is defined as the model path in the
+	      CIM Specification and has the form:
+		  <classname>.<keyPropertyName1>=
+		      <value1>[,<keypropertyNamex>=<valuex>]*
+
+		  <valuex> is either a numeric value or a string value
+		  (enveloped in quotes). The quote marks surrounding
+		  string values are required.
+	      However,	to  make  inputting  command line object names, cimcli
+	      offers a second option for inputting the object name as  [Opera
+	      tionTarget].   In this second case, the [OperationTarget] Object
+	      is simply the class name and value parameters are used to define
+	      the  keypropertyName/value  pairs.   In this case, the quotation
+	      marks  around  string  property  values  are  optional  and  are
+	      required	only  in  the  case  where  quotation  marks  would be
+	      required to define a value such as a string that includes quota
+	      tion marks.
+
+	      Thus, as an example, the input for a getInstance might be:
+
+		  cimcli gi TennisPlayer.first="Patrick",last="Rafter"
+		  or
+		  cimcli gi TennisPlayer first=Patrick last=Rafter
+
+	      In  the  second  case, cimcli gets the class from the CIM Server
+	      and uses the parameters to form a correct CIMObjectPath. In  the
+	      first  case, generally cimcli uses the input path directly with
+	      out getting the class from the server.
+
+
+       [options...]
+	      Options are identified on the command line  with	the  -	or  --
+	      notation.  There are several types of options:
+
+
+       1.      Execution Modification Options - A set of options that are uni
+	       versal and modify or define the execution of the command or the
+	       form  of  the  return.	This includes options like setting the
+	       output format for object responses or requesting  only  summary
+	       operation.
+
+
+       2.      Connection Options - Options that define the connection for the
+	       operation.  This includes options for  defining	the  CIMServer
+	       address,  namespace,  and  security  options such as user name,
+	       password and SSL settings.
+
+       3.      Operation Parameter Options - A set of options  that  represent
+	       the  optional  input  parameters  for selected operations.  The
+	       [operation] defines the CIM Operation that will be executed and
+	       the  options  define  the optional request parameters.  Typical
+	       context options might be -n namespace (used on most but not all
+	       operations)or  -niq  which  sets includequalifiers to false for
+	       operations that use the includeQualifiers optional parameter.
+
+       4       Help Options - A set of options to display  help  (-h,  --help,
+	       --ho to get a list of all options, and -hc to get a list of all
+	       commands).  When these options are requested, no  operation  is
+	       executed.
+
+       [value-parameters]
+	       Some of the operations allow or require extra parameters. these
+	       are typically keywords or keyword/value pairs and  are  defined
+	       as part of the particular operation that use them.
+
+	       Any  extra  parameter  entities	on the command line that occur
+	       after the [Operation] and [Operation Target] and are  not  pro
+	       ceeded by "-" to indicate an option are considered value param
+	       eters.  These are used in some of  the  operations  to  provide
+	       additional  information	required  or optionally desired by the
+	       operation.  See each operation definition to determine if extra
+	       parameters  are	required or allowed.  These may be either key
+	       name/value pairs in some cases or simply strings  depending  on
+	       the operation.
+
+	       NOTE:  cimcli does not protect the user against inputting extra
+	       options or parameters.  Since the options are heavily dependent
+	       on  the	operation  to  be  executed,  it  simply ignores those
+	       options that are not used with a particular  operation.	 Thus,
+	       entering the -r option (role) with a getClass operation is syn
+	       tactically allowed but cimcli ignores the parameter.
+
+
+OPTIONS
+   Connection Options
+       There is a set of options which are general to all of  the  CIM	Opera
+       tions  and most of the compound operations and which provide parameters
+       for the initiation or execution of the  operations  (ie.  identify  the
+       target server and set connection security parameters..  These include:
+
+       -n [namespace]
+	      Namespace  name  for  this  operation (ex. -n root). The default
+	      namespace is root/cimv2 if this parameter is not entered
+
+       -l [location]
+	      Host name or IP address and optionally port for this  operation.
+	      The  default for this command if the -n option is not used is to
+	      use the OpenPegasus connectLocal() function to  connect  to  the
+	      server.	Note  that  this  means  that a command like cimcli gc
+	      CIM_Door may not work when trying to connect to a  server  other
+	      than Pegasus on the same system. If cimcli is to be used to con
+	      nect to a CIM Server other than Pegasus on the same  system  use
+	      -l  localhost  or -l 127.0.0.1 or the actual name or IP address.
+	      This will force cimcli to make the connection in the normal way,
+	      not using connectLocal()
+
+       -u [user-name]
+	      The user name to be used in the connection to the CIM server for
+	      the command
+
+       -p [password]
+	      The password to be used in the connection to the CIM server  for
+	      the command
+
+
+       -s     Connect  with  SSL  -  Boolean option that specifies that cimcli
+	      should attempt to connect over a secure  connection  using  SSL.
+	      This  option  causes cimcli to modify the client connect call to
+	      set the SSLContext option to the certificate  defined  with  the
+	      --cert and --key options.  If this option is set but neither the
+	      --cert or --key options are included,  the  SSLContext  for  the
+	      connect call is submitted with the Cert and key marked NULL.
+
+	      NOTE:  Since  SSL  is considerd a compilable option with cimcli,
+	      these options may not even exist in a Pegasus  environment  that
+	      was compiled with the SSL capabilities disabled.
+
+
+       --cert [certificate file path]
+	      Defines  the  file  name	of  a  certificate to be used with the
+	      client connect if the -s option is set.  This  is  optional  and
+	      used only with the -s and --key options.
+
+
+       --key [client key file path]
+	      Defines the file name of a Client private key.  This is optional
+	      and only has an effect on connections made over HTTPS using -s
+
+
+   CIMCLI OPERATION MODIFICATION OPTIONS
+       There is a set of options that modifies the manner in which the command
+       is  executed  or  the  display of information on response including the
+       following:
+
+
+       --t    Measure time for the operation to be  completed  and  report  it
+	      upon command completion. If this option is set, the time for the
+	      operation is recorded upon  completion  of  the  operation.   In
+	      addition,  the  client infrastructure is queried to determine if
+	      the operation execution times optionally measured in the infras
+	      tructure	and at the server are available. If they are, they are
+	      displayed also.  This would allow the user to see a) time  spent
+	      in the server, b) round trip time for the operation, c) applica
+	      tion round trip time for the operation. Note that when  combined
+	      with  the  repeat  option, the output includes maximum, minimum,
+	      and average times for the operation.  There are a specific oper
+	      ations  in cimcli to turn control statistics generation (See son
+	      and soff operations)
+
+
+       --sort A boolean option that requests cimcli to sort the returned enti
+	      ties for multi-entity operations (ex enumerate, reference, asso
+	      ciator). Whereas the order of returned entities is  random  from
+	      most  CIM  Servers  setting this option outputs the objects in a
+	      defined order.  The order is  based  on  the  Name  element  for
+	      classes  and  qualifier  declarations  and  on  the  object path
+	      returned for instances and CIM objects.
+
+
+       --r [repeat_count]
+	      Repeat the operation repeat_count times. This repeats the opera
+	      tion without disconnecting. This option is useful for setting up
+	      tests that load the server with repeated calls and also for get
+	      ting  average  times for an operation by taking the average of a
+	      number of calls ( when used with the summary information	option
+	      and the measure time option).
+
+       -delay [seconds]
+	      Delay count seconds between connect and operation.
+
+
+       --sum  Present  only  summary  information, not full output.  Generally
+	      cimcli presents counts of objects returned in place of the names
+	      or objects themselves.
+
+
+       --count [object_count]
+	      Defines  an  expected  count  of	objects  to be returned in the
+	      response.  cimcli is terminated with an error exit if the number
+	      of  objects  returned  does  not match the object_count supplied
+	      with the option.	This test can be used in batch files  to  test
+	      for  number of objects returned by an operation.	In addition to
+	      the error status code, a message of the general form:
+		   "Failed count test. Expected= xx. Received= yy"  is	output
+	      to cerr.
+
+	      Example:
+
+		 cimcli en CIM_ManagedElement -count 100
+
+		     If the count of instances returned is not equal to 100, cimcli exits
+		     with error code 60 and the Failed count test ... error message.
+
+       --timeout [seconds]
+	      Set  the	connect  timeout  to  some time other than the default
+	      timeout.
+
+
+       -o [ xml | mof | table ]
+	      Output type for commands that output objects. Used with commands
+	      that  present CIM objects in their response. Presents the output
+	      in the form of xml corresponding to DMTF CIM/XML	specification,
+	      mof, or for instances a table of the data in each property.
+
+
+       -verbose
+	      Displays	details on the options and execution for the execution
+	      of the operation.
+
+
+       --setRtnHostNames [SubstituteHostName]
+	      String option with a required parameter that  set  a  substitute
+	      host  name  which  cimcli  will  insert into returned objects to
+	      replace host names returned from the server.   This  option  was
+	      defined  because the object paths/references returned by the CIM
+	      Server may include the host name as part of the returned	object
+	      path which makes it difficult to compare the returned paths to a
+	      defined path.  Using this option forces any returned host  names
+	      to  be changed to the string parameter supplied with the option.
+
+
+   OPERATION PARAMETER OPTIONS
+       There is a set of options that define request parameters  for  specific
+       cimcli  Operation requests.  These are typically optional parameters on
+       the CIM operation request that modify the behavior of the server to the
+       request.   This includes things like requesting localonly, deep inheri
+       tance, etc.  Note that the actual behavior may be dependent on the par
+       ticular	operation  request type.  The full definition of these options
+       is below here and their use with  each  specific  cimcli  operation  is
+       defined with the operations.
+
+
+       -pl [propertylist]
+	      Set  the	propertylist parameter for those operations that allow
+	      this parameter.  The propertylist value for this parameter is  a
+	      comma-separated  list  of class properties.  This sets the prop
+	      ertylist optional parameter on those CIM operations  that  allow
+	      this parameter including: getClass, getInstance, modifyInstance,
+	      enumerateInstances, associators, and references.	If this option
+	      is not defined on the execution of one of these operations, cim
+	      cli sets the propertylist parameter to NULL indicating that  all
+	      properties should be returned.
+
+	      If  a  comma-separated list of one or more properties is defined
+	      as the value for this option, a propertylist with  these	values
+	      is set on the CIM request operation.
+
+	      Since  this CIM request parameter specifically allows 3 options:
+	      1) list of properties, 2) NULL which is the indicator  that  all
+	      properties are to be returned, and 3) Empty which is the indica
+	      tor that no properties are to be include in  the	response,  the
+	      cimcli  options specifically allows defining the empty option by
+	      setting propertylist to either "" or  accepts  either  an  input
+	      that the command processor interprets as an empty string or as a
+	      string consisting of two quotation marks.
+
+	      The syntax of propertylist is:
+
+		  <propertyName>[,<propertyName>]* | ""
+
+	      Examples:
+
+		  cimcli gc CIM_ManagedElement -pl Caption
+		  cimcli gc CIM_ManagedElement -pl Caption,Description
+		  cimcli gc CIM_ManagedElement -pl ""
+
+
+       -niq   Boolean (not_include_Qualifiers) that sets the operation parame
+	      ter  for	include_qualifiers  to	false.	Note that this form is
+	      required because the default for this option  in	the  DMTF  CIM
+	      Operations  is  true  (include  qualifiers).  Not including this
+	      option sets the request to include qualifiers on those  commands
+	      to which this option applies.
+
+
+       -nlo   Boolean  that  defines  whether properties from superclasses are
+	      included in the response.  the -nlo option turns this  parameter
+	      off.   The  default  if  this  parameter	is  not included is to
+	      request that the server return only local properties and	ignore
+	      those from superclasses.
+
+
+       -di    Boolean  to  set the deep inheritance CIM operation parameter to
+	      true.
+
+
+       -ic    Boolean parameter sets the CIM operation	parameter  classOrigin
+	      in  the  operation request to true. the CIMServer is expected to
+	      return classOrigin information as part of the response.
+
+
+       -ac [assocatonClassName]
+	      String defining the association  Class  parameter  for  the  CIM
+	      Operation.  Used with reference and association operations.
+
+
+       -rc [resultClassName]
+	      String defining the resultClass parameter for the CIM Operation
+
+
+       -r [role]
+	      String defining the role parameter for the CIM Operation
+
+
+       -rr [resultrole]
+	      String defining the resultrole parameter for the CIM Operation
+
+
+OPERATIONS
+       This  section  defines  the  individual operations supported by cimcli.
+       Note that the either the names (ex. EnumerateInstances) or the shortcut
+       (ei)  may  be  used in inputting an [operation] on the command line and
+       they are case independent.
+
+
+       ci CreateInstance
+	      This  cimcli  operation  requests  that  the  server  create  an
+	      instance by building the properties of an instance from a combi
+	      nation of the class name and value parameters provided with  the
+	      input.  The command issues the CIM operation createInstance with
+	      an instance built from the parameters provided.  It requires the
+	      [OperationTarget]  parameter  defining  the  class for which the
+	      instance is to be created and also allows for an optional set of
+	      value  parameters  that  define properties to be provided in the
+	      created instance in the following format:
+		[propertyName]=value
+		   where value may be either a scalar for scalar properties
+		   or an array for array properties.
+
+		The detailed form for the input is defined in section TBD.
+	      If the propertyName parameter is provided  with  no  value,  the
+	      default  value or NULL if there is no default value is inserted.
+
+	      Note that string property values	are  a	special  case  because
+	      there  are actually two concepts that must be covered when there
+	      is no value, 1) Empty String or 2. NULL/default value.
+
+	      Thus when a property that requires an  empty  string  is	to  be
+	      input,  the user will specify it with no value after the = sign.
+	      If, a NULL or default value is desired, the = sign terminator is
+	      replaced with the ! (exclamation mark).
+
+	      The operation first accesses the CIMServer for the class defini
+	      tion and uses this information to build the proper  value  types
+	      and values for the instance.
+
+	      This  command builds the instance with all of the properties for
+	      which name/value pairs representing the properties of the  class
+	      are  input.   It	does  not  include any properties that are not
+	      defined on the command line.
+
+	      To create an instance with less than the full set of properties,
+	      supply only those properties that are to be submitted to the CIM
+	      Server.
+
+	      Scalar property values - The String form of the property similar
+	      to  MOF input of constant values is used to input scalar values.
+
+	      Array property values - Array properties are defined by defining
+	      a value of the form:
+
+		   { scalarvalue1[,scalarvaluex]*}
+
+	      Note  that  the  array  MUST  NOT include any spaces between the
+	      scalarvalue entities.
+
+	      [FUTURE]The capability exists to create  "incorrect"  properties
+	      as  an  additional test capability. Generally this means proper
+	      ties with an incorrect type or with names that are not  part  of
+	      the class for which the instance is being built.
+
+	      [FUTURE]If a property value definition is supplied with the form
+
+	       "("PropertyType")"[propertyName]=value
+
+	      where property type is one  of  the  CIM	property  types  (i.e.
+	      boolean,	String, Uint8, etc.) the property will be recreated or
+	      added to the instance with that type and name.  Thus, a property
+	      can  be  added  with an incorrect name or with an incorrect type
+	      overriding the definition in the class.
+
+	      The command will be rejected if the class does not exist in  the
+	      namespace.
+
+	      Examples:
+		  cimcli ci CIM_xxxx name=abc size=zyx
+		  cimcli ci CIM_xxxx name=abc anotherproperty=32
+		      create an instance of CIM_xxxx with name property value = abc,
+		   a property added named another property with type uint32 and
+		   value of 32.
+		  cimcli ci CIM_xxxx name=abc arrayParam={abc,def,ghi,"jkl mno"        numericArray=1,2,3,4
+	      Returns  the  object path of the created instance if the call to
+	      the CIM server was executed successfully.  Otherwise it  returns
+	      the exception received.
+
+
+       mi ModifyInstance
+	      This  operation allows the modification of existing instances in
+	      the target server by building the properties from a  combination
+	      of  the target Class and properties provided with the input. The
+	      command issues the CIM operation modifyInstance with an instance
+	      built  from  the	parameters  provided.  It requires the [Opera
+	      tionTarget] parameter defining the class for which the  instance
+	      is to be created and a set of value parameters that define prop
+	      erties to be provided in the  created  instance  in  the	format
+	      defined for CreateInstance above.
+
+	      In  the  same  manner  as the createInstance, this command first
+	      acquires the class definition for the server and uses the  prop
+	      erty type information from the class to properly crate the prop
+	      erty value types from the input property values.
+
+	      In addition to the property definitions, this command allows the
+	      property	list  options (-pl) that defines a property list to be
+	      supplied to the target server with the modifyInstance CIM Opera
+	      tion.
+
+	      Example:
+		  cimcli mi CIM_xxxx name=abc size=zyx
+		  cimcli mi CIM_xxxx name=abc arrayParam={abc,def,ghi,"jkl mno" 	  numericArray=1,2,3,4
+
+       ec EnumerateClasses
+	      Issues  the  enumerateClasses CIM operation which enumerates the
+	      class hierarchy starting at the level defined by <classname>.
+
+	      The syntax for this operation is:
+
+	      cimcli ec [classname] [options]
+
+	      where classname is not  required.   If  it  is  omitted,	cimcli
+	      inserts  an  empty  classname into the CIM operation which tells
+	      the CIM Server to start at the  top  of  the  class  inheritance
+	      tree.  The possible options that represent the parameters of the
+	      enumerateClasses operation are:
+
+
+	      -niq Boolean (not_include_Qualifiers) that  sets	the  operation
+	      parameter for include_qualifiers to false.
+
+	      -nlo  Boolean  that defines whether properties from superclasses
+	      are included in the response. the -nlo option turns this parame
+	      ter off
+
+	      -ic  Boolean parameter sets the operation parameter includeClas
+	      sOrigin in the operation request. the CIMServer is  expected  to
+	      return classOrigin
+
+	      information as part of the response.
+
+	      -pl [propertyList] Optional property list for the operation.
+
+	      Example:
+		 cimcli ec CIM_ManagedElement -di -nlo
+
+
+       nc EnumerateClassNames
+	      The  EnumerateClassNames	cimcli operation issues the enumerate
+	      ClassNames CIM Operation.
+
+	      The syntax for this operation is:
+
+	      cimcli nc [<classname>] [options]
+
+	      The classname parameter optional and the default it is not  pro
+	      vided is to return the class names of the top level classes.
+
+	      The options specific to this operation include;
+
+	      -di  set	the  operation	deepInheritance  parameter  = true not
+	      localOnly
+
+	      Examples:
+		   cimcli nc CIM_door
+		       Issue getClass CIM Operation for the class CIM_Door.
+
+
+       ni EnumerateInstanceNames
+	      Execute the enumerateInstanceNames CIM Operation. The syntax for
+	      this operation is:
+
+	      cimcli ni [classname] [options]
+
+	      Where:
+
+		  classname  -	classname  for	which instance names are to be
+	      enumerated.
+
+	      It displays the instances names that were returned  by  the  CIM
+	      server  in response to the enumerateInstances CIM operation with
+	      the defined input parameters. If the  --sum  option  is  set  it
+	      returns only the count of names returned.
+
+	      Examples:
+		  cimcli ni CIM_ManagedElement -p password -n name -n root/PG_Interop --sort
+
+		   Execute the enumerateInstanceNames operation on CIM_ManagedElement
+		   class in the root/PG_Interop namespace. Sort the returned list
+		   of instance paths.
+
+		  cimcli ni CIM_Door --sum
+		      Execute the enumerateInstanceNames operation on the class CIM_Door
+		   and return the count of instance paths returned.
+
+       ei EnumerateInstances
+	      Execute  the  CIM  operation  enumerateInstances. The syntax for
+	      this operation is:
+
+	      cimcli ei [className] [options]
+
+	      This operation requests instances from the  CIMServer  and  dis
+	      plays the returned instances in a user selected format.
+
+	      The  following  options  represent  specific parameters for this
+	      operation
+
+	      -nlo not local only operation parameter  to  false.   Note  that
+	      this  negative  form  for the option is used because the default
+	      for local only parameter is  true.   Thus,  not  including  this
+	      parameter means that the parameter is not set.
+
+	      -iq Boolean (include_Qualifiers) that sets the operation parame
+	      ter for include_qualifiers to true,
+
+	      -ic Boolean to set include class origin operation  parameter  to
+	      true.
+
+	      -di Set deep inheritance operation parameter to true.
+
+	      -o  [xml|mof|table]  Set	the output format for the instances to
+	      display the returns as mof
+
+	      -pl [propertyList] optional property list for the operation
+
+	      It returns the instances found either as MOF,XML or a  table  of
+	      property values with each property a column in the table depend
+	      ing on the output options parameter.
+
+	      Examples:
+		  cimcli ei CIM_ComputerSystem -niq -di
+		      This example enumerates CIM_ComputerSystem in the namespace
+		      root/CIMV2 (default) requesting without qualifiers (-niq) with
+		      deepInheritance (-di).
+
+       niall enumerateallinstanceNames
+	      Execute an enumerateinstancenames on  all  classes  to  get  all
+	      class   names  within  the  defined  namespace.	This  function
+	      searches the complete namespace using the CIM getClass operation
+	      to  get  the  classes  and the enumerateInstanceNames command to
+	      enumerate all of the instances for each class.  It  returns  the
+	      list of all of the instance names found in the namespace.
+
+	      The syntax for this operation is:
+
+	      cimcli niall [options]
+
+	      where  the  options  include  any  of the universal options (ex.
+	      namespace, location, etc.)
+
+	      Examples:
+		  cimcli niall -n test/testproviders
+
+		      Returns all instancenames in the namespace test/testproviders by
+		      executing enumerateinstancenames on each class in the namespace.
+
+       gi GetInstance
+	      Gets the instance defined by the	instance  name	parameter  and
+	      displays	it  in the format chosen for this operation (xml, mof,
+	      or table).
+
+	      The syntax for this operation is:
+
+	      cimcli gi [objectname] [options]
+
+	      which causes execution of the CIM getinstance operation.	OR
+
+	      cimcli gi [classname] [options]
+
+	      which presents a list of possible instances  to  the  user  from
+	      which  one  can  be selected for the getinstance.  In this case,
+	      the command actually executes an enumerateInstanceNames  to  get
+	      the  list  of instances that is presented to the user for selec
+	      tion of a single instance.  The getInstance  is  executed  after
+	      the user makes a selection.
+
+	      This command requires the [objectname] parameter.  If the param
+	      eter is an instance with keys defined (a CIMObjectPath),	the  a
+	      getInstance  CIM	operation  is executed and the return from the
+	      CIM Server presented (in either xml or mof depending on the out
+	      put option).  If the input is a class name, a enumerateinstance
+	      Names CIM Operation is executed and if any  instance  names  are
+	      returned	the result is presented to the console for the user to
+	      select one of the instances to be deleted.
+
+	      If there are no instances, the return from this command is  nor
+	      mally  an exception as defined in the DMTF CIM Operations speci
+	      fication..
+
+	      The possible options specific to this operation are:
+
+	      -iq  include  qualifiers.  The  default	for   getInstance   is
+	      includQualifiers=false  so  use of this parameter is required if
+	      the user wants qualifiers returned.  NOTE: The use of the param
+	      eter  in	CIM/XML  has  been  deprecated so the provider may not
+	      return qualifiers even if requested.
+
+	      -nlo localonly
+
+	      -pl [propertyList] optional property list for the operation
+
+	      Examples:
+		  cimcli gi cim_ManagedElement
+
+		      This is an interactive request that returns a list of CIMObjectPaths
+		   from an enumerateInstance of CIM_ManagedElement from which the
+		   user can select one path which cimcli will uses as the [objectname]
+		   to execute a getInstance operation returning the instance.
+
+
+       di deleteInstance
+	      Delete instance executed a single deleteInstance command to  the
+	      CIM Server.  The syntax is:
+
+		   cimcli di [objectname] [options]
+
+	      This  command  requires  the  [objectname]  parameter.   If this
+	      parameter is a full instance name with className and  key  bind
+	      ings, the deleteInstance CIM Operation is executed directly.  If
+	      it is a class name with no keybindings, the   enumerateInstances
+	      CIM  Operation  is  executed  and  the list of returned instance
+	      paths presented to the console for the user  to  select  one  to
+	      delete.	cimcli then executes CIM deleteInstance operation with
+	      the selected [objectname] and returns the response.
+
+	      The response to this operation is either an  empty  response  if
+	      the  instance was successfully deleted or an exception return if
+	      there were any errors.
+
+	      Examples:
+		  cimcli di President."name=fred" -n test/testnamespace
+
+		      Attempt to delete the instance of President with the key property
+		   name - fred from the test/testnamespace namespace.
+
+		  cimcli di President  -n test/testnamespace
+
+		      cimcli requests instance paths for the President class in the
+		   test/testnamespace and puts the complete list on the console for
+		   the user to select one instance to delete.
+
+
+       gq getQualifier
+	      getQualifier displays the target qualifier. The syntax is:
+
+	      cimcli gq [qualifier name] [options]
+
+	      Examples:
+		  cimcli gq abstract - returns the mof or XML for the abstract qualifier.
+
+       sq setQualifier
+	      This command is not implemented.
+
+
+       eq enumeratequalifiers
+	      Issues the CIM Operation to  enumerate  all  of  the  qualifiers
+	      defined in the target namespace. The syntax is:
+
+	      cimcli eq [options]
+
+	      There are no special options for this operation.
+
+
+       dq deletequalifier
+	      Issues  the CIM operation to delete the target qualifier defined
+	      by qualifier_name in the target namespace.  The Syntax is:
+
+	      cimcli dq [qualifier_name] [options]
+
+	      NOTE: This operation should be used with	great  caution	as  it
+	      removes  qualifier declarations that may be used by other compo
+	      nents of the model.
+
+
+       a associators
+	      Execute the CIM Operation enumerate associators for  the	target
+	      object name.  The syntax for this operation is:
+
+	      cimcli a [objectname] [options]
+
+	      Note that the objectname may be either a classname or an instan
+	      cename.  If classname is	supplied,  the	return	is  a  set  of
+	      classes that match the objectname supplied unless the -i (inter
+	      active) parameter is used.  If objectname is used, the  response
+	      is instances of the association that matches the classname.
+
+	      The options provide the various operation parameters including;
+
+	      -ac [assocatonClassName] association Class parameter
+
+	      -rc [resultClassName] resultClass parameter
+
+	      -r  [role] String defining the role parameter for the CIM Opera
+	      tion
+
+	      -rr [resultrole] resultrole parameter
+
+	      -ic includeClassOrigin The -ic parameter
+
+	      -pl [properytlist] Optional PropertyList
+
+	      -i Interactive request - If this parameter is supplied  and  the
+	      objectname  is  a classname, the environment performs an enumer
+	      ateInstances on the objectname and presents the list of possible
+	      instances for user selection
+
+       an associatornames
+	      Enumerate  the associator names for the target object.  The syn
+	      tax for this operation is:
+
+	      cimcli an [objectname] [options]
+
+	      where objectname can be either a class name or an instance name.
+
+	      The following options provide the various operation parameters;
+
+	      -ac [assocatonClassName] association Class parameter
+
+	      -rc [resultClassName] resultClass parameter
+
+	      -r  [role] String defining the role parameter for the CIM Opera
+	      tion
+
+	      -rr [resultrole] resultrole parameter
+
+	      -i Interactive request - If this parameter is supplied  and  the
+	      objectname  is  a classname, the environment performs an enumer
+	      ateinstances on the objectname and presents the list of possible
+	      instances for user selection
+
+
+       r references
+	      Executes	 the  CIM  Operation  references.  Which  returns  CIM
+	      Objects.	The syntax for this the operation is:
+
+	      cimcli r [objectname] [options]
+
+	      Note that the objectname may  be	either	a  class  name	or  an
+	      instance name.  If a class name is supplied, the return is a set
+	      of classes that of the  association.  If	the  -i  (interactive)
+	      parameter  is  used with a class name input, the user is queried
+	      for the  objectname  parameter.	If  objectname	is  used,  the
+	      response	is instances of the associations that match the class
+	      name
+
+	      The options specifically used by this operation are:
+
+	      -r [role] role parameter for the CIM Operation.
+
+	      -rc [resultClassName] resultClass parameter for the  CIM	Opera
+	      tion
+
+	      -iq includeQualifiers (The default is false)
+
+	      -ic  Boolean  to set include class origin operation parameter to
+	      true.
+
+	      -pl [propertyList] optional property list for the operation
+
+	      -i Interactive request - This option is used only with  commands
+	      that  will accept either classname or object name as input (ref
+	      erence,  referencenames,	associatiors,	associatornames).   It
+	      allows  the  interactive	mode  where the user picks an instance
+	      from a list returned by cimcli (similar to gi where if only  the
+	      classname  is supplied, cimcli knows that the user wants to pick
+	      from a list) with these commands. If this parameter is  supplied
+	      and  the	objectname is a classname, the environment performs an
+	      enumerateinstances on the objectname and presents  the  list  of
+	      possible	instances  for user selection. Thus, the user can exe
+	      cute interactive reference, etc. operations
+
+	      Examples:
+		   cimcli a CIM_ManagedElement
+			would return classs that associate with CIM_ManagedElement
+
+		   cimcli a CIM_ManagedElement -i
+			executes an enumerateInstanceNames on CIM_ManagedElement and
+		     presents the user with a list of instances names so that the user can
+		     pick an instance name that will be used for the associator request.
+
+       rn referencenames
+	      Executes the CIM Operation referencenames that returns CIMObject
+	      paths of the references of the objectname parameter.
+
+	      The syntax for this operation is:
+
+	      cimcli rn [objectname] [options]
+
+	      Note  that  the  objectname may be either a class name or a spe
+	      cific instance name.  If classname is supplied, the return is  a
+	      set  of  classnames  that  are references of the objectname sup
+	      plied.  If the -i parameter is used with a class name as object
+	      name,  the  user	is  queried to select an instance name for the
+	      objectname input.   If  objectname  is  used,  the  response  is
+	      instance names of the associations that matches the classname.
+
+	      The options specifically used by this operation are:
+
+	      -r [role] role parameter for the CIM Operation
+
+	      -rc  [resultClassName]  resultClass parameter for the CIM Opera
+	      tion
+
+	      -i Interactive request - If this parameter is supplied  and  the
+	      objectname  is  a classname, the environment performs an enumer
+	      ateinstances on the objectname and presents the list of possible
+	      instances for user selection
+
+
+       im invokeMethod
+	      This  operation  executes a CIM extrinsic operation to execute a
+	      method on a CIM class or instance.
+
+	      The form of the command is:
+
+	      cimcli im [objectname] [methodname] *[parameters] [options]
+
+	      Note that there are two required parameters to this command, the
+	      [objectname] and the [methodname].
+
+	      Parameters are input in the form:
+		   parameterName=<value>
+
+		   <value> defines may be any of the value forms defined for
+		   CIM value including string, integer, etc.  NOTE: Earlier versions
+		   of cimcli allowed only String values.
+	      The  completed operations displays the return code from the com
+	      mand and any returned  parameters  that  are  qualified  as  OUT
+	      parameters.
+
+	      Example:
+		   cimcli PG_WBEMSLPTemplate register -n root/PG_Interop
+
+		   cimcli PG_XXX dosomething input1=true input2=1111
+		   --- input1 is boolean parameter and input2 is Uint32 parameter
+
+       eq executeQuery
+	       The executeQuery operation is not supported in the current ver
+	      sion of cimcli.
+
+
+       son    Set the CIMServer  statistics  to  enabled  by  doing  a	modify
+	      instance	of  the  CIM_ObjectManager  instance  that defines the
+	      server. This depends on the server having implemented statistics
+	      and  having  also  implemented the functionality of enabling and
+	      disabling  statistics   through	setting   this	 property   in
+	      CIM_ObjectManager.  This should be considered a temporary opera
+	      tion in cimcli until a more permanent utility is	provided  with
+	      OpenPegasus  to  manage  this type of functionality.  The corre
+	      sponding operation soff will attempt to  disable	statistics  on
+	      the  server.   This works with OpenPegasus servers starting with
+	      version 2.5.1.
+
+	      DEPRECATED to be replaced by at some time in the future
+
+	      The syntax of the operation is:
+
+	      cimcli son
+
+
+       soff   See the operation son.  This is the corresponding  operation  to
+	      turn off statistics in the server.
+
+	      DEPRECATED
+
+	      The syntax of the operation is:
+
+	      cimcli soff
+
+
+       ns enumeratenamespaces
+	      Request  an  Enumeration of all the namespaces in the target CIM
+	      Server.  This command uses both the CIM_Namespace class  and  if
+	      that  fails,  the  __Namespace  class  to  determine the list of
+	      namespaces.
+
+	      RETURN - It returns a list of the namespace  names  returned  by
+	      the CIM Server.
+
+	      The syntax for this operation is:
+
+	      cimcli ns [options]
+
+	      Note that since this operation enumerates namespaces, the names
+	      pace option (-n) is not used.
+
+	      Examples	    cimcli ns
+
+
+       -hc Show Command Options
+	      This operation shows the cimcli operations with a brief descrip
+	      tion of each operation.
+
+	      Examples	    cimcli -hc
+
+
+OPTIONS LIST
+       There  are  a  significant  number  of options to this utility, some if
+       which provide specific information for one or more commands and some of
+       which  are universal across all of the commands.   In general, the pro
+       gram does not check for spurious options so that if you input an option
+       that  is not used by a particular operation, it is simply ignored. Note
+       that some of the options require parameters.
+
+       The following is an alphabetic list of the options:
+
+       -ac [assocatonClassName]
+	      The association  class  name  parameter  defines	an  assocClass
+	      string  for  Associator calls (associators and associatornames).
+	      Default().
+
+	      Example:
+		    -ac CIM_ManagedElement
+
+       -ar association_role_name
+	      Defines an association role for associator operations.  Example:
+	      -ar  dependent.  This  optional  parameter is used only with the
+	      association CIM Operations.
+
+
+       --cert [certificateFilePath]
+	      Defines a certificate to be used with the client connect if  the
+	      -s  option  is  set. This is optional and used only  with the -s
+	      and --key options. The parameter certificateFilePath is required
+	      with  the parameter and defined the file containing the certifi
+	      cate.
+
+
+       -delay [time in seconds]
+	      Delay between  connection  and  request  .  Default(0).  example
+	      -delay  3 delays 3 seconds between the call and the transmission
+	      of the actual CIM operation.  This is used only in some  testing
+	      environments.
+
+       -di    Specifies  the  boolean  parameter deepInheritance parameter for
+	      selected commands. Setting this options causes  the  deepinheri
+	      tance=true  to be transmitted for the operation.	Note that this
+	      means different things to different commands and	is  used  only
+	      with the enumerate commands.
+
+
+       -d     More  detailed debug messages from cimcli. This can be useful in
+	      the case where the user is debugging CIM functionality.
+
+
+       -h     Prints help usage message.
+
+
+       --help Prints full help message with commands, options, examples.
+
+
+       -ho    Prints list of cimcli options.
+
+
+       -hc    Prints cimcli Operation command list.  This  list  includes  the
+	      CIM  Operatons  defined  by the CIM Operations specification and
+	      other operations that were felt to  be  useful  in  testing  CIM
+	      environments.
+
+
+       -ic    Boolean to set include class origin operation parameter to true.
+
+
+
+       -ip [inputParameterList]
+	      Defines an invokeMethod input parameter list. Format is:
+
+	      p1=v1,p2=v2,..,pn=vn (without spaces) . Default()
+
+
+       -f [filter]
+	      Defines a filter to use for query. One String input . Default()
+
+
+       -o [ xml | mof | table ]
+	      Output in xml, mof, or table  format.  Default(mof)  if  the  -o
+	      options is not included.
+
+
+       -iq    Specifies  the  includeQualifiers  operation input parameter for
+	      selected commands.Since the CIM/XML default for  this  parameter
+	      is  true	for  some  operations (class operations) and false for
+	      others (instance operations), the  option  is  useful  only  for
+	      instance	operations.   Also the includeQualifiers parameter has
+	      been deprecated in the CIM/XML specification so the results  for
+	      instance	operations  is	undetermined.	See  also -niq for the
+	      includeQualifiers parameter for class operations.
+
+
+       --key [client key file path]
+	      Defines a Client private key. This is optional and only  has  an
+	      effect on connections made over HTTPS using the -ssl option.
+
+
+       -l [location]
+	      Define CIM Server host address for the operation.  This includes
+	      either  name  or	IP  address  and  optional  port  number(Host
+	      Name:port).   The  default  is  localhost:5988.  If name is used
+	      without port, port 5988 is assumed.  Examples include  -l  fred,
+	      -l fred:9999, -l 10.1.134.66 -l 10.1.134.123:5977
+
+
+       -lo    Specifies  the  localOnly  operation parameter for selected com
+	      mands if the option is set.  See the commands for more  informa
+	      tion. This option is Deprecated in favor of the -nlo because the
+	      default for local only is on so that generally the -lo is simply
+	      the default.  We recommend using -nlo to turn off local only.
+
+
+       -n [namespace]
+	      Defines  the  namespace for the operation.host name. The default
+	      is   root/cimv2.	 Example   -n	root/PG_Interop    sets    the
+	      root/PG_Interop namespace as the namespace for the current oper
+	      ation.
+
+
+       -p [password]
+	      Allows input of a password for server authentication of the com
+	      mand.  (	ex.  -p  12345678). The default is that the command is
+	      submitted with no password.
+
+
+       -u [User]
+	      Defines user name for CIM Server authentication. Default	is  no
+	      user  name  and  no authentication.  ( ex -u john) Default is no
+	      user name and no authentication from the client.
+
+
+       -lo    DEPRECATED.  This was used to set LocalOnly.   However,  default
+	      should  be  true	and  we cannot use True as default.  See -nlo.
+	      Default(true).
+
+
+       -nlo   When set,  sets  LocalOnly  =  false  on	the  CIM  operation  .
+	      Default(false).
+
+
+       -ic    Sets  includeClassOrigin	= true for operation that support this
+	      parameter (i.e. get and enumerate classes and instances, associ
+	      ators,  and  references operations).  Note that the class origin
+	      information is only output for the -o xml output operation since
+	      class origin is not part of the MOF format.
+
+       -niq   Sets includeQualifiers = false on operations. Default(false).
+
+
+       -pl [propertyList]
+	      Defines  a  propertyName List which is an optional parameter for
+	      some  CIM  Operations.  Format  is  p1,p2,p3  (without  spaces).
+	      Default is that the property list is set to NULL indicating nor
+	      mally that the operation	should	return	all  properties.   The
+	      property list typically has 3 possibilities 1) empty which means
+	      return no properties, 2) list of properties to be  returned,  3)
+	      NULL  which  means  return all properties.  Since the default is
+	      NULL, not applying the option  means  that  all  properties  are
+	      being  requested.   To  set this parameter to empty use the form
+	      -pl "".
+
+
+       -r [role]
+	      Defines a role string for reference role parameter. Default()
+
+
+       -rc [resultClassName]
+	      Defines a resultClass string  for  References  and  Associators.
+	      Default()
+
+
+       -rr [resultRole]
+	      Defines  a  role	string	for  associators  operation resultRole
+	      parameter.
+
+
+       --setRtnHostNames [SubstituteHostName]
+	      String option with a required parameter that  set  a  substitute
+	      host  name  which  cimcli  will  insert into returned objects to
+	      replace host names returned from the server.   This  option  was
+	      defined  because the object paths/references returned by the CIM
+	      Server may include the host name as part of the returned	object
+	      path which makes it difficult to compare the returned paths to a
+	      defined path.  Using this option forces any returned host  names
+	      to  be changed to the string parameter supplied with the option.
+
+
+       --sum  Displays only  summary  counts  for  enumerations,  associators,
+	      etc.This	option	is used to with the repeat option to repeat an
+	      operation without getting the full return display.   It  reduces
+	      the  display  to summary information.  It is often used with the
+	      time option --t to generate time for  execution  information  on
+	      many repetitions of a command.
+
+
+       --timeout [seconds]
+	      Set  the	connection timeout in seconds. If not set, the timeout
+	      is the default Pegasus client timeout which for Pegasus is  nor
+	      mally  to about 30 seconds. This option executes the client call
+	      to set timeout.
+
+
+       -trace [trace_level]
+	      Set Pegasus Common Components Trace.  Sets the Trace  level.   0
+	      is off.  Default(0).  The trace level can be set to 0 - 4.
+
+
+       --v    Displays cimcli and Pegasus software Version.
+
+
+       -v     Verbose  Display.  Includes  Detailed  parameter Input display .
+	      Default(false). Outputs extra information about  the  parameters
+	      actually	used in the request and the return from the operation.
+	      This is primarily a debugging tool.
+
+
+       --r [repeat_count]
+	      Number of times to repeat the function. Zero means one time. The
+	      option  can  be used to repeat an operation within a single call
+	      to cimcli.  It simply repeats the operation defined  the	number
+	      of times defined by the repeat_count within the same connection.
+	      Thus, it	establishes  the  connection  executes	the  operation
+	      repeat_count times and then terminates.  It can be used with the
+	      --time option to measure execution times for many repetitions of
+	      an operation.
+
+
+       -s     Boolean  option that specifies that the Client should attempt to
+	      connect over the secure connection using SSL. This option causes
+	      cimcli  to  modify the client connect call to set the SSLContext
+	      option to the certificate defined  with  the  --cert  and  --key
+	      options.	 If this option is set but neither the --cert or --key
+	      options are included, the SSLContext for	the  connect  call  is
+	      submitted with the Cert and key marked NULL.
+
+	      NOTE:  since  SSL is considered a compilable option with cimcli,
+	      these options may not even exist in a Pegasus  environment  that
+	      was compiled with the SSL capabilities disabled.
+
+
+       --sort Sort  the output objects before display for multi-object outputs
+	      such  as	enumerates,  references,   associations,   and	 their
+	      corrsponding  ...names  operations  and  for the enumerateQuali
+	      fierDecls.  Whereever cimcli delivers multiple entities  in  the
+	      response, the use of this option tells cimcli to attempt to sort
+	      the output entities.  Generally  the  sort  order  is  assending
+	      order  using   a)  class name for operations that return classes
+	      and b) CIM Object Path for operations that return instances.
+
+
+       --t    Measure time for the operation and present results. When set the
+	      response	time  for  the operation is presented with the command
+	      output.  If the --r (repeat) option is  set,  minimum,  maximum,
+	      and  average  times  are	presented.  Note that the time for the
+	      operation itself is presented in addition to  the  overall  time
+	      for connect, operation, and disconnect.  If statistics are being
+	      gathered by the server, setting this option  also  presents  the
+	      server time, and the client round trip time which are calculated
+	      by the server and client infrastructure.
+
+
+       -x     Output objects in xml instead of mof format. Default(false)
+
+
+EXAMPLES
+       Execute an enumerateinstancenames CIM operation for the pg_computersys
+       tem Class
+       cimcli  enumerateinstancenames pg_computersystem  -- enumerateinstances
+       of class
+	  or
+	cimcli ei pg_computersystem    -- Same as above
+
+       Enumerate the class names from the default namespace "root/cimv2"
+	cimcli enumerateclassnames -- Enumerate classnames from root/cimv2.
+
+       Enumerate class names from the namespace "root"
+	cimcli ec /n root -- Enumerate classnames from namespace root.
+
+	cimcli ec -o xml   -- Enumerate classes with XML  output  starting  at
+       root.
+
+	cimcli enumerateclasses CIM_ComputerSystem -di
+	   -- Enumerate classes starting at CIM_ComputerSystem and the
+	      remainder of the class hiearchy (-di) with mof output of the
+	      classes.
+
+	cimcli getclass CIM_door -a -u guest -p guest
+	   --  Get  class with authentication set and user = guest, password =
+       guest.
+
+	cimcli rn TST_Person.name=@MIKE@ -n root/sampleprovider  -rc  TST_Lin
+       eage.
+
+	cimcli	ec -o XML -- enumerate classes and output XML rather than MOF.
+
+	cimcli getqualifiers -- Get the qualifiers in mof output format
+
+
+RETURN VALUE
+       cimcli returns a significant number of error codes as follows:
+
+       0 Successful execution of the operation.
+
+       1-49 A CIM Operation executed as part of the cimcli operation  returned
+       a  CIM Exception as defined in the DMTF CIM Operations over HTTP speci
+       fication.  The status code of the error is returned. While  today  only
+       not  all  of  the  numbers from 1 to 49 are used for CIM Status errors,
+       cimcli has reserved this set of numbers with the expectation that  this
+       list will expand in the future.
+
+       cimcli  will  not  return  any  error  codes in this range that are not
+       specifically defined by DMTF error status codes and  generated  by  the
+       CIM Operation calls.
+
+       50 Pegasus Exception encountered during execution of Pegasus Functions
+
+       51 CIMCLI general error not covered by other errors
+
+       52 Unknown exception occurred during execution of the operation
+
+       53 Command line or configuration file input parsing error.
+
+       54 Connection to server failed error.
+
+       60  cimcli  failed  a  compare  with one of the test operations such as
+       testInstance. The returned entity did not match the properties  of  the
+       object defined by the input parameters.
+
+
+AUTHOR
+       Karl Schopmeyer k.schopmeyer@opengroup.org
+
+
+
+				     LOCAL			     cimcli(1)
