@@ -35,6 +35,8 @@
 #include <Pegasus/Common/Signal.h>
 #include <Pegasus/Common/Executor.h>
 
+#include <libxml/parser.h>
+
 #define MAX_WAIT_TIME 240
 
 PEGASUS_USING_PEGASUS;
@@ -184,5 +186,11 @@ int ServerProcess::platform_run(
     Boolean shutdownOption,
     Boolean debugOutputOption)
 {
+    // XAPI requires libxml parser support. However, it appears to be pthreads unfriendly.
+    // Don't do it in every pthread, do it once in the parent process.
+    // Of course, this only works if the providers are hosted in the parent process (
+    // forceProviderProcess=false cim option
+    xmlInitParser();
+
     return cimserver_run(argc, argv, shutdownOption, debugOutputOption);
 }

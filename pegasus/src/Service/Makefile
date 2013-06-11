@@ -32,7 +32,7 @@ DIR = Service
 
 include $(ROOT)/mak/config.mak
 
-LOCAL_DEFINES = -DPEGASUS_INTERNALONLY -DPEGASUS_SERVICE_INTERNAL
+LOCAL_DEFINES = -DPEGASUS_INTERNALONLY -DPEGASUS_SERVICE_INTERNAL $(shell xml2-config --cflags)
 
 STATIC=1
 LIBRARY = pegservice
@@ -63,6 +63,7 @@ ifeq ($(OS),zos)
 endif
 
 EXTRA_INCLUDES = $(SYS_INCLUDES)
+EXTRA_LIBRARIES += -lxml2
 
 include $(ROOT)/mak/library.mak
 
