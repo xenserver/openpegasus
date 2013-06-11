@@ -1,0 +1,50 @@
+Summary: OpenPegasus
+Name: openpegasus
+Version: @PEGASUS_VERSION@
+Release: @XS_PATCH_VERSION@
+License: MIT
+Vendor: The Open Group, with modifications from Citrix Systems, Inc.
+Group: Systems Management/Base
+BuildRoot: %{_tmppath}/%{name}
+BuildArch: i386
+URL: http://www.openpegasus.org
+
+%define optdir /opt/openpegasus
+%define bindir %{optdir}/bin
+%define sharedir %{optdir}/share
+
+%description
+
+%prep
+exit 0
+
+%build
+exit 0
+
+%install
+exit 0
+
+%clean
+exit 0
+
+%post
+set -eu
+chmod a+x %{sharedir}/*.sh
+%{sharedir}/install-openpegasus.sh $1
+
+%preun
+set -eu
+
+if [ $1 = 0 ]
+then
+  pidof -s cimserver >/dev/null && service openpegasus stop
+  chkconfig --del openpegasus || true
+  rm -rf %{optdir}/cimserver*
+  rm -rf %{optdir}/repository
+fi
+
+%files
+%defattr(-,root,root,-)
+%attr(755, root, root) /etc/init.d/openpegasus
+/etc/ld.so.conf.d/openpegasus.conf
+%{optdir}

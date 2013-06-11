@@ -196,7 +196,7 @@
 #define WSMAN_PROTOCOL_VERSION "http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"
 
 // Vendor of this WS-Management implementation.
-#define WSMAN_PRODUCT_VENDOR "The Open Group (OpenPegasus)"
+#define WSMAN_PRODUCT_VENDOR "Citrix Systems, Inc."
 
 // Version of this WS-Management implementation.
 
