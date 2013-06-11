@@ -229,9 +229,10 @@ public:
 
     Array<CIMObjectPath> getClassPathList() const;
 
+    WQLSelectStatementRep* _rep;
 private:
 
-    WQLSelectStatementRep* _rep;
+    // WQLSelectStatementRep* _rep;
 
     //void f() const { }
 

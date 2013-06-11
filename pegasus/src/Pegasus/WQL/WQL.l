@@ -147,6 +147,11 @@ IDENT_CHAR [A-Za-z_]
     return TOK_IS;
 }
 
+[Ll][Ii][Kk][Ee] {
+    WQL_TRACE(("LEX: %s [TOK_LIKE]\n", yytext));
+    return TOK_LIKE;
+}
+
 [-+]?{POSITIVE_DECIMAL_DIGIT}{DECIMAL_DIGIT}* {
 
     WQL_TRACE(("LEX: %s [TOK_INTEGER]\n", yytext));
