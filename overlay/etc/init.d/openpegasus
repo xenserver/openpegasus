@@ -1,0 +1,38 @@
+#! /bin/bash
+#
+# description: OpenPegasus
+# chkconfig: 2345 35 65
+
+start() {
+	echo -n "Starting OpenPegasus... "
+        cd /opt/openpegasus && /opt/openpegasus/bin/cimserver
+        echo "done."
+}
+
+stop() {
+	echo -n "Stopping OpenPegasus... "
+        /opt/openpegasus/bin/cimserver -s
+        echo "done."
+}
+
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

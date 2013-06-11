@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -eu
+
+start()
+{
+  /opt/openpegasus/share/install-openpegasus.sh 1
+}
+
+case $1 in
+  start) start ;;
+esac
