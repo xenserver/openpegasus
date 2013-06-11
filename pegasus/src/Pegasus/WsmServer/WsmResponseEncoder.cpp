@@ -645,6 +645,7 @@ void WsmResponseEncoder::_encodeWsInvokeResponse(
     if (soapResponse->appendBodyContent(body))
     {
         _sendResponse(soapResponse);
+	delete soapResponse;
     }
     else
     {
