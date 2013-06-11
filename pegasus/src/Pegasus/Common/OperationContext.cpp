@@ -202,6 +202,7 @@ class IdentityContainerRep
 {
 public:
     String userName;
+    String authenticatedPassword;
 };
 
 const String IdentityContainer::NAME = "IdentityContainer";
@@ -219,6 +220,7 @@ IdentityContainer::IdentityContainer(
 
     _rep = new IdentityContainerRep();
     _rep->userName = p->_rep->userName;
+    _rep->authenticatedPassword = p->_rep->authenticatedPassword;
 }
 
 IdentityContainer::IdentityContainer(const IdentityContainer& container)
@@ -228,12 +230,20 @@ IdentityContainer::IdentityContainer(const IdentityContainer& container)
 {
     _rep = new IdentityContainerRep();
     _rep->userName = container._rep->userName;
+    _rep->authenticatedPassword = container._rep->authenticatedPassword;
 }
 
 IdentityContainer::IdentityContainer(const String& userName)
 {
     _rep = new IdentityContainerRep();
     _rep->userName = userName;
+}
+
+IdentityContainer::IdentityContainer(const String& userName, const String& password)
+{
+    _rep = new IdentityContainerRep();
+    _rep->userName = userName;
+    _rep->authenticatedPassword = password;
 }
 
 IdentityContainer::~IdentityContainer()
@@ -250,6 +260,7 @@ IdentityContainer& IdentityContainer::operator=(
     }
 
     _rep->userName = container._rep->userName;
+    _rep->authenticatedPassword = container._rep->authenticatedPassword;
 
     return *this;
 }
@@ -261,7 +272,7 @@ String IdentityContainer::getName() const
 
 OperationContext::Container* IdentityContainer::clone() const
 {
-    return new IdentityContainer(_rep->userName);
+    return new IdentityContainer(_rep->userName, _rep->authenticatedPassword);
 }
 
 void IdentityContainer::destroy()
@@ -272,6 +283,11 @@ void IdentityContainer::destroy()
 String IdentityContainer::getUserName() const
 {
     return _rep->userName;
+}
+
+String IdentityContainer::getAuthenticatedPassword() const
+{
+    return _rep->authenticatedPassword;
 }
 
 

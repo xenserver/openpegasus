@@ -206,6 +206,13 @@ public:
     IdentityContainer(const String& userName);
 
     /**
+        Constructs an IdentityContainer with a specified user name.
+    *   @param userName A String user name for this identity.
+    *   @param userName A String user name for this identity.
+    */
+    IdentityContainer(const String& userName, const String& authenticatedPassword);
+
+    /**
         Destructs the IdentityContainer.
     */
     virtual ~IdentityContainer();
@@ -241,6 +248,7 @@ public:
         @return A String containing the user name identity.
     */
     String getUserName() const;
+    String getAuthenticatedPassword() const;
 
 protected:
     /**

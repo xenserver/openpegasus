@@ -36,6 +36,59 @@
 
 PEGASUS_USING_STD;
 
+#if USEXENAPIAUTH
+#include <xen/api/xen_all.h>
+#include <dlfcn.h>
+//
+// The following is necessary to allow pegasus to authenticate against
+// xapi rather than delegate to the PAM auth handlers. This will allow
+// pegasus to take advantage of the AD integration features in xen and
+// is necessary if 3rd party providers are installed side by side.
+//
+/* This comes from the XenServer-CIM source code */
+extern "C" {
+typedef struct 
+{
+    xen_session *xen;
+    int socket;
+    xen_host host;
+} xen_utils_session;
+
+void (*xen_utils_xen_close)();
+int (*xen_utils_xen_init)();
+int (*xen_utils_cleanup_session)(xen_utils_session *session);
+int (*xen_utils_get_session)(xen_utils_session **session, const char *user, const char *pw);
+}
+
+bool xenapi_authenticate(const char *username, const char *password)
+{
+    bool authenticated = false;
+    void *xenlibhandle = NULL;
+
+    /* to prevent a circular dependency on xen-cim RPMs, load the xen-cim library dynamically */
+    xenlibhandle = dlopen("libXen_Support.so", RTLD_LOCAL | RTLD_LAZY);
+    if(xenlibhandle == NULL)
+        return false;
+    *((void **)&xen_utils_xen_init) = dlsym(xenlibhandle, "xen_utils_xen_init");
+    *((void **)&xen_utils_xen_close) = dlsym(xenlibhandle, "xen_utils_xen_close");
+    *((void **)&xen_utils_cleanup_session) = dlsym(xenlibhandle, "xen_utils_cleanup_session");
+    *((void **)&xen_utils_get_session) = dlsym(xenlibhandle, "xen_utils_get_session");
+
+    (*xen_utils_xen_init)();
+    xen_utils_session *session = NULL;
+    /* This request will fail if made to the any host other than the pool master */
+    if((*xen_utils_get_session)(&session, username, password) && session) {
+        int i=0, j=0;
+         authenticated = true;
+         (*xen_utils_cleanup_session)(session);
+    }
+    (*xen_utils_xen_close)();
+
+    dlclose(xenlibhandle);
+    return authenticated;
+}
+#endif
+
 PEGASUS_NAMESPACE_BEGIN
 
 PAMBasicAuthenticator::PAMBasicAuthenticator()
@@ -69,11 +122,21 @@ Boolean PAMBasicAuthenticator::authenticate(
     PEG_METHOD_ENTER(TRC_AUTHENTICATION,
         "PAMBasicAuthenticator::authenticate()");
 
+#if USEXENAPIAUTH
+    CString usercs = userName.getCString();
+    CString passcs = password.getCString();
+    const char* user = (const char *)usercs;
+    const char* pass = (const char *)passcs;
+    //we use xenapi to do the authentication (for AD authentication support and so on).
+    if(!xenapi_authenticate(user, pass))
+        return false;
+#else
     if (Executor::authenticatePassword(
         userName.getCString(), password.getCString()) != 0)
     {
         return false;
     }
+#endif
 
     PEG_METHOD_EXIT();
     return true;

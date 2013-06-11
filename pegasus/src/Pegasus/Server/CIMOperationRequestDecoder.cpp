@@ -199,6 +199,7 @@ void CIMOperationRequestDecoder::handleHTTPMessage(HTTPMessage* httpMessage)
 
     String userName;
     String authType;
+    String password;
     Boolean closeConnect = httpMessage->getCloseConnect();
 
     PEG_TRACE((
@@ -210,6 +211,7 @@ void CIMOperationRequestDecoder::handleHTTPMessage(HTTPMessage* httpMessage)
 
     userName = httpMessage->authInfo->getAuthenticatedUser();
     authType = httpMessage->authInfo->getAuthType();
+    password = httpMessage->authInfo->getAuthenticatedPassword();
 
     // Parse the HTTP message:
 
@@ -518,6 +520,7 @@ void CIMOperationRequestDecoder::handleHTTPMessage(HTTPMessage* httpMessage)
         cimObject,
         authType,
         userName,
+        password,
         httpMessage->ipAddress,
         httpMessage->acceptLanguages,
         httpMessage->contentLanguages,
@@ -538,6 +541,7 @@ void CIMOperationRequestDecoder::handleMethodCall(
     const String& cimObjectInHeader,
     const String& authType,
     const String& userName,
+    const String& password,
     const String& ipAddress,
     const AcceptLanguageList& httpAcceptLanguages,
     const ContentLanguageList& httpContentLanguages,
@@ -1367,7 +1371,7 @@ void CIMOperationRequestDecoder::handleMethodCall(
     CIMMessage* cimmsg = dynamic_cast<CIMMessage*>(request.get());
     if (cimmsg != NULL)
     {
-        cimmsg->operationContext.insert(IdentityContainer(userName));
+        cimmsg->operationContext.insert(IdentityContainer(userName, password)); // XAPI
         cimmsg->operationContext.set(
             AcceptLanguageListContainer(httpAcceptLanguages));
         cimmsg->operationContext.set(
