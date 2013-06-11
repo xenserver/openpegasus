@@ -65,7 +65,7 @@ static bool _isInputParameter(const CIMParameter& cp)
         }
     }
 
-    return false;
+    return true;
 }
 
 WsmToCimRequestMapper::WsmToCimRequestMapper(CIMRepository* repository)
