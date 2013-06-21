@@ -20,8 +20,8 @@ CIM_SCHEMA_ZIP := $(CARBON_DISTFILES)/cim/cim_schema_2.23.0Experimental-MOFs.zip
 CIM_SCHEMA_DIR := $(PEGASUS_HOME)/share/Schemas/CIM223
 PG_SCHEMA_DIR := $(PEGASUS_HOME)/share/Schemas/Pegasus
 
-LIBXENSERVER_BIN := $(PROJECT_OUTPUTDIR)/api-bindings/libxenserver-bin.tar.bz2
-LIBXENSERVER_SRC := $(PROJECT_OUTPUTDIR)/api-bindings/libxenserver-src.tar.bz2
+LIBXENSERVER_BIN := $(PROJECT_OUTPUTDIR)/xen-api-sdk/libxenserver-bin.tar.bz2
+LIBXENSERVER_SRC := $(PROJECT_OUTPUTDIR)/xen-api-sdk/libxenserver-src.tar.bz2
 
 LIBXENSERVER_DIR := $(MY_OBJ_DIR)/libxenserver
 LIBXENSERVER_H := $(LIBXENSERVER_DIR)/include/xen/api/xen_all.h
