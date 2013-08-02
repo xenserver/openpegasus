@@ -8,24 +8,21 @@ Group: Systems Management/Base
 BuildRoot: %{_tmppath}/%{name}
 BuildArch: i386
 URL: http://www.openpegasus.org
+Source0: openpegasus.tar.gz
 
 %define optdir /opt/openpegasus
 %define bindir %{optdir}/bin
 %define sharedir %{optdir}/share
 
 %description
-
-%prep
-exit 0
-
-%build
-exit 0
+A patched version of the upstream openpegasus project for use with XenServer.
 
 %install
-exit 0
+cd %{buildroot}
+tar zxvf %{SOURCE0}
 
 %clean
-exit 0
+rm -rf %{buildroot}
 
 %post
 set -eu

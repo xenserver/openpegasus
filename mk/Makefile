@@ -43,7 +43,7 @@ $(PEGASUS_RPM_LINK): $(PEGASUS_RPM)
 $(MY_OUTPUT_DIR)/cmpi-headers.tar.bz2:
 	tar -C $(CMPI_DIR)/.. -cjf $@ $(notdir $(CMPI_DIR))
 
-$(PEGASUS_RPM): $(PEGASUS_SPEC) pegasus
+$(PEGASUS_RPM): $(PEGASUS_SPEC) pegasus $(RPM_DIRECTORIES)
 	mkdir -p $(@D)
 	$(call mkdir_clean, $(PEGASUS_RPM_TMP_DIR)$(CIM_SCHEMA_DIR))
 	rsync -av --delete $(PEGASUS_HOME)/bin $(PEGASUS_HOME)/lib \
@@ -54,6 +54,7 @@ $(PEGASUS_RPM): $(PEGASUS_SPEC) pegasus
 	rsync -av --exclude \*~ $(REPO)/overlay/ $(PEGASUS_RPM_TMP_DIR)/
 	mkdir -p $(PEGASUS_RPM_TMP_DIR)/opt/openpegasus/providers
 	mkdir -p $(PEGASUS_RPM_TMP_DIR)/opt/openpegasus/trace
+	cd $(PEGASUS_RPM_TMP_DIR) && tar zcvf $(RPM_SOURCESDIR)/openpegasus.tar.gz *
 	$(RPMBUILD) -bb $<
 
 $(PEGASUS_SPEC): $(REPO)/openpegasus.spec.in pegasus
