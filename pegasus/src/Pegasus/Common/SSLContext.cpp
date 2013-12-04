@@ -272,7 +272,11 @@ int SSLCallback::verificationCRLCallback(
     X509_REVOKED* revokedCert = NULL;
     for (int i = 0; i < sk_X509_REVOKED_num(revokedCerts); i++)
     {
+#if OPENSSL_VERSION_NUMBER >= 0x10000000
+        revokedCert = (X509_REVOKED *)sk_value(&X509_CRL_get_REVOKED(crl)->stack, i);
+#else
         revokedCert = (X509_REVOKED *)sk_value(X509_CRL_get_REVOKED(crl), i);
+#endif
 
         //a matching serial number indicates revocation
         if (ASN1_INTEGER_cmp(revokedCert->serialNumber, serialNumber) == 0)
