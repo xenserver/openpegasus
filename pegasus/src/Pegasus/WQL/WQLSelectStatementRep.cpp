@@ -60,7 +60,7 @@ Boolean _LikeEvaluate(const char *prop_value, const char *like_exp)
         }
         else {
             /* no trailing %, exact match for the end of the string is required */
-            char *tmp = strstr(prop_value, str_to_match);
+            const char *tmp = strstr(prop_value, str_to_match);
             if (tmp) 
                 match = (strcmp(tmp, str_to_match) == 0);
         }
